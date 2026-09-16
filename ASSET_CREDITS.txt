@@ -1,0 +1,34 @@
+NO CAUSE FOR ALARM — asset provenance
+
+School Classrooms Asset Pack
+Creator: Styloo / Styl0o_
+Source: https://styloo.itch.io/classroom-asset-pack
+License: Creative Commons Zero v1.0 Universal (CC0), as listed by the creator on the asset page, retrieved 2026-09-16.
+Attribution: Not required; voluntarily credited in game and here.
+Used: school tables, chairs, lectern, lockers, clock, book, radio, monitor, vending machine, fire extinguisher, telephone.
+Modifications: normalized scale, replacement muted materials and lighting.
+Creator's original import notes: Assets/ThirdParty/Styloo/Readme.txt.
+
+Furniture Kit (2.0)
+Creator: Kenney
+Source: https://kenney.nl/assets/furniture-kit
+License: CC0 / http://creativecommons.org/publicdomain/zero/1.0/
+Attribution: Not required; voluntarily credited in game and here.
+Used: desks, chairs, tables, kitchen cabinets, refrigerator, bathroom fittings, shelves, computer monitor, boxes, waste bins.
+Original license: Assets/ThirdParty/Kenney/License.txt.
+Modifications: normalized scale, replacement muted materials and lighting.
+
+Original project assets
+Original character portrait mesh: generated in Blender by Tools/create_portrait.py; source SourceAssets/Portrait.blend.
+Original face atlas: generated using the built-in OpenAI image-generation tool for this project, with twelve original fictional identities. Assets/Resources/Characters/FaceAtlas.png. Prompt and integration notes: Documentation/ART_DIRECTION.md. No reference-game face was supplied or copied.
+Original campus architecture, character assemblies, deformations, animations, lighter, effects, textures and UI: project code.
+Original ambience, drone and sound effects: Tools/generate_audio.py. Deterministic synthesized PCM; no sampled recordings.
+PA voice: original written dialogue rendered with the installed Windows System.Speech synthesizer. No actor recording or external voice clone.
+Story, dialogue, evidence and institution: original fictional content created for this project.
+
+Runtime dependencies
+Unity 6.4.7f1 and Universal Render Pipeline 17.4.0: Unity Technologies; Unity licensing terms apply.
+LegacyRuntime font: Unity built-in runtime font.
+
+No reference-game characters, models, music, logos or dialogue were copied.
+No paid or account-gated character/animation assets were imported. Original procedural animation is used instead of Mixamo.

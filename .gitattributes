@@ -1,0 +1,21 @@
+*.cs text eol=lf
+*.shader text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.meta text eol=lf
+*.unity text eol=lf
+*.asset text eol=lf
+*.mat text eol=lf
+*.meta whitespace=-blank-at-eol
+*.asset whitespace=-blank-at-eol
+*.unity whitespace=-blank-at-eol
+*.mat whitespace=-blank-at-eol
+Assets/ThirdParty/** -whitespace
+*.ps1 text eol=crlf
+*.fbx binary
+*.blend binary
+*.png binary
+*.wav binary
+*.zip binary

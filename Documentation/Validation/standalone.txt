@@ -1,0 +1,46 @@
+PASS twelve connected rooms
+PASS twelve NPCs
+PASS rendered screenshot: 01-menu
+PASS rendered screenshot: 02-opening
+PASS opening reaches gameplay
+PASS rendered screenshot: 03-lecture
+PASS walkable doorway: LECTURE 01
+PASS walkable doorway: CAFETERIA
+PASS walkable doorway: CLASSROOM 02
+PASS walkable doorway: COMPUTER LAB
+PASS walkable doorway: CLASSROOM 03
+PASS walkable doorway: BATHROOM
+PASS walkable doorway: STAFF OFFICE
+PASS walkable doorway: SECURITY
+PASS walkable doorway: STORES
+PASS walkable doorway: MAINTENANCE
+PASS walkable doorway: ARCHIVE
+PASS walkable doorway: UTILITY
+PASS archive starts access-locked
+PASS rendered screenshot: 04-corridor
+PASS caretaker grants key
+PASS rendered screenshot: 05-dialogue
+PASS security grants clearance
+PASS sample analysis unlocks evidence
+PASS rendered screenshot: 06-notebook
+PASS document-gated lecturer confession
+PASS infinite flame survives calibrated duration and reveals ceiling
+PASS reference candle extinguishes after thirty seconds
+PASS rendered screenshot: 07-haunted-candle
+PASS ceiling encounter spawns pursuer
+PASS rendered screenshot: 08-encounter
+PASS sealing ends chase
+PASS power repair restores supply
+PASS day reaches evacuation
+PASS exit opens manifest
+PASS rendered screenshot: 09-manifest
+PASS integrated survival ending
+PASS rendered screenshot: 10-ending
+PASS save/load roundtrip
+PASS new game resets ending
+PASS chronological run finds ceiling without injected evidence
+PASS full chronological investigation reaches survival through ordinary actions
+PASS full run retains combined clues and secret branch
+PASS continue restores completed case
+PERFORMANCE NVIDIA GeForce RTX 3060 / 1280x720 / median 16.67 ms / p95 16.67 ms / allocated 115 MiB
+TOTAL ERRORS: 0

@@ -1,0 +1,1 @@
+Native input: moved 3.84690868580205 metres; fuel before 100.0, after 98.8876953125.
