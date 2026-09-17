@@ -11,6 +11,9 @@ Validated on 2026-09-17 using Unity 6000.4.7f1, Windows x64 and an NVIDIA GeForc
 - Exclusive fullscreen, borderless windowed and windowed modes are applied in the standalone player and verified through Screen.fullScreenMode. Each selection survives Preferences.Save/Load.
 - The hand and priest are absent from game Resources. The lighter is the actual Poly Haven mesh with moving lid and animated flame. Candles share the animated flame effect.
 
+- Native keyboard/mouse input passed: moved 3.86 metres, consumed lighter fuel, paused/resumed, opened the notebook and directory, then quit. The existing user save was restored after testing.
+- The Windows package is 49.4 MB compressed (approximately 127 MB player data), with an integrity-checked ZIP and SHA-256 recorded in Distribution/build-info.json.
+
 Reports: [story](Validation/story.txt), [graphics and display](Validation/graphics.txt), [standalone gameplay](Validation/standalone.txt), [native input](Validation/input.txt).
 
 Visual review images: [classroom](Screenshots/classroom.png), [bathroom](Screenshots/bathroom.png), [lighter](Screenshots/lighter.png), [candle](Screenshots/candle.png), [requests](Screenshots/requests.png), [settings](Screenshots/settings.png).

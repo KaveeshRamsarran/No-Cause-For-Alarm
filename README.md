@@ -44,7 +44,7 @@ Do not edit runtime scripts during a build. Unity must compile the same class la
 
 ## Validation
 
-The build runs 7,010 story assertions across 1,000 seeds before packaging. The opt-in standalone harness checks the integrated opening, helper gates, evidence, candle encounter, power repair, manifest, ending, save/load and restart. It uses a separate save file.
+The build runs 7,010 story assertions across 1,000 seeds before packaging. The standalone harness passes 67 checks covering the integrated opening, physical deliveries, helper gates, evidence, candle encounter, power repair, manifest, ending, save/load and restart. A further 224 graphics checks cover animations, placements and all three display modes. It uses a separate save file.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File Tools/smoke-test.ps1

@@ -18,10 +18,33 @@ PASS walkable doorway: ARCHIVE
 PASS walkable doorway: UTILITY
 PASS archive starts access-locked
 PASS rendered screenshot: 04-corridor
+PASS help request waits for physical supplies without spending an action
+PASS collectible enters inventory: batteries
+PASS collectible enters inventory: keyledger
+PASS collectible enters inventory: fuse
+PASS collectible enters inventory: samplekit
+PASS collectible enters inventory: usb
+PASS collectible enters inventory: inhaler
+PASS collectible enters inventory: canopener
+PASS collectible enters inventory: cassette
+PASS collectible enters inventory: gloves
+PASS collecting supplies costs no investigation actions
+PASS inventory survives save and load
 PASS caretaker grants key
 PASS rendered screenshot: 05-dialogue
 PASS security grants clearance
 PASS sample analysis unlocks evidence
+PASS delivered supplies are consumed
+PASS completed help delivery for Iris Chen
+PASS completed help delivery for Noah Pike
+PASS completed help delivery for Mara Vale
+PASS completed help delivery for Ben Harlow
+PASS completed help delivery for June Park
+PASS completed help delivery for Len Ortiz
+PASS completed help delivery for Dr. Mara Ellis
+PASS completed help delivery for Sol Mercer
+PASS repeating a completed request grants no extra action cost or reward
+PASS all nine delivered supplies leave inventory
 PASS rendered screenshot: 06-notebook
 PASS document-gated lecturer confession
 PASS infinite flame survives calibrated duration and reveals ceiling
@@ -42,5 +65,5 @@ PASS chronological run finds ceiling without injected evidence
 PASS full chronological investigation reaches survival through ordinary actions
 PASS full run retains combined clues and secret branch
 PASS continue restores completed case
-PERFORMANCE NVIDIA GeForce RTX 3060 / 1280x720 / median 16.67 ms / p95 16.67 ms / allocated 115 MiB
+PERFORMANCE NVIDIA GeForce RTX 3060 / 1280x720 / median 10.00 ms / p95 10.00 ms / allocated 126 MiB
 TOTAL ERRORS: 0
