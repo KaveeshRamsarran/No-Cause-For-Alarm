@@ -36,3 +36,14 @@ Added an original twelve-person photographic face atlas using the built-in image
 Visual QA found and fixed mirrored/oversized world signs, text rendering through walls, portrait camera framing, head import rotation, flame shader stripping, and an overlapping candle/chair. Native input QA found and fixed double Escape handling that prevented pause/resume. All twelve room doorways were traversed by the actual CharacterController. A second integration run uses ordinary actions from 10:00 through the final manifest, without injecting clues or setting the clock.
 
 The requested 45–90 minute first-playthrough target requires human pacing tests. Procedural acting is deliberately limited; there is no full voice cast, rebinding UI, or commercial character-animation package. The complete loop is the implementation priority. These limitations should not be confused with measured duration or a claim of commercial-release QA.
+
+
+## 1.1 - school art, deliveries and display modes (2026-09-17)
+
+Replaced the cast with the requested City People models and their native humanoid clips. Removed the priest and first-person hand. Integrated the user's requested School assets pack for school/office furniture and counters; retained the free Kenney toilet model because this pack has no toilet. Normalized chairs from backrest geometry, corrected toilet facing, reduced the teaching desk, mounted emergency sconces/fire cabinets, separated window modules and moved clues onto real desk surfaces. NPC spawn positions now avoid desks and chairs.
+
+Imported Slinc's CC0 Vintage Lighter from Poly Haven with textured metal, cutout vents and an animated lid. Replaced both lighter/candle sphere flames with soft animated flame ribbons and flickering light. The supplied footstep recording provides ten trimmed contacts; its free-use permission is the owner's confirmation.
+
+Added fullscreen, borderless windowed and windowed preferences. Added nine collectable supplies, saved inventory, item hand-ins, distinct request dialogue and a notebook request tracker. Help requests now require the relevant items/documents and grant concrete access, evidence, repairs or health. Repeated hand-ins cannot duplicate rewards. Individual greetings replace the shared opening line.
+
+Free Unity Store raw art and derived prefabs/clips remain local under their EULA. The compiled Windows build includes them; setup scripts and the current source/credits are documented in Documentation/GRAPHICS_OVERHAUL.md. The CC0 lighter source and converted art are included in the repository. Final verification records are in Documentation/QA.md.

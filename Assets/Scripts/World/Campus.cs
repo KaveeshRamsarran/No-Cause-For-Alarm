@@ -14,6 +14,13 @@ namespace NoCauseForAlarm
     {
         public List<Room> rooms=new List<Room>(); public List<NpcActor> actors=new List<NpcActor>();
         public Transform ceilingPanel; public Camera securityCamera; public RenderTexture securityTexture;
+        public Vector3 HomePosition(int id)
+        {
+            var center=FindRoom(Cast.All[id].room).center;
+            if(id==6)return center+new Vector3(-2,0,-3.4f);
+            if(id==5)return center+new Vector3(0,0,-4.35f);
+            return center+new Vector3(id==7?2:0,0,id==9?3.8f:-3.4f);
+        }
         public Room FindRoom(string name)=>rooms.Find(r=>r.name==name);
         public string Location(Vector3 p)
         {
@@ -50,21 +57,22 @@ namespace NoCauseForAlarm
             for(int i=0;i<12;i++)
             {
                 var room=FindRoom(Cast.All[i].room);var g=new GameObject(Cast.All[i].name);g.transform.SetParent(transform);
-                Vector3 p=room.center+new Vector3(i==7?2:0,0,i==9?3.8f:-3.4f);g.transform.position=p;
+                Vector3 p=HomePosition(i);g.transform.position=p;
                 var a=g.AddComponent<NpcActor>();a.Build(i,room);actors.Add(a);
             }
-            PlaceEvidence("register","Attendance register", "LECTURE 01",new Vector3(2,.83f,1));
-            PlaceEvidence("bag","Unclaimed student bag", "CLASSROOM 03",new Vector3(2,.12f,2));
-            PlaceEvidence("tissue","Translucent tissue", "BATHROOM",new Vector3(1,.86f,1));
+            PlaceEvidence("register","Attendance register", "LECTURE 01",new Vector3(2,.81f,0));
+            PlaceEvidence("bag","Unclaimed student bag", "CLASSROOM 03",new Vector3(2.65f,.18f,2));
+            PlaceEvidence("tissue","Translucent tissue", "BATHROOM",new Vector3(1.45f,.81f,1));
             PlaceEvidence("photo","Photograph: Cohort 19", "STAFF OFFICE",new Vector3(1,.83f,1));
             PlaceEvidence("report","Sealed ventilation study", "ARCHIVE",new Vector3(1,.83f,1));
             PlaceEvidence("maintenance","Duct maintenance report", "MAINTENANCE",new Vector3(1,.83f,1));
             PlaceEvidence("fuel","Lighter refill tin", "STORES",new Vector3(1,.83f,1));
-            PlaceEvidence("medical","First-aid incident card", "CLASSROOM 02",new Vector3(1,.83f,1));
+            PlaceEvidence("medical","First-aid incident card", "CLASSROOM 02",new Vector3(.35f,.81f,0));
             PlaceDevice("cctv","REVIEW CAMERA ARCHIVE","SECURITY",new Vector3(1,1.05f,1));
             PlaceDevice("computer","RECOVER DELETED FILES","COMPUTER LAB",new Vector3(1,1.05f,1));
             PlaceDevice("power","REPAIR FUSE CABINET","UTILITY",new Vector3(2,1.2f,2));
             PlaceDevice("seal","CLOSE EXTRACTION DAMPER","MAINTENANCE",new Vector3(2,1.2f,2));
+            foreach(var supply in HelpRequests.Supplies)SupplyPickup.Place(supply,transform,FindRoom(supply.room).center+supply.position);
             Candle("STAFF OFFICE",false);Candle("CLASSROOM 03",true);
             var r3=FindRoom("CLASSROOM 03");ceilingPanel=Geometry.Box("Loose ceiling panel",r3.center+new Vector3(0,3.26f,1),new Vector3(1.7f,.08f,1.7f),Geometry.trim,transform,false).transform;
             var cg=new GameObject("CCTV / East corridor");cg.transform.SetParent(transform);cg.transform.position=new Vector3(2.4f,2.9f,32);cg.transform.rotation=Quaternion.Euler(15,185,0);
@@ -101,24 +109,22 @@ namespace NoCauseForAlarm
             var interact=leaf.AddComponent<Interactable>();interact.Setup("door","OPEN / CLOSE "+r.name,"");interact.door=door;
             Geometry.Lamp(c+new Vector3(-2,3.18f,-2),false,transform);Geometry.Lamp(c+new Vector3(2,3.18f,2),false,transform);
             Geometry.Lamp(c+new Vector3(s*4,2.7f,0),true,transform);
-            Geometry.Box("Window recess",new Vector3(s*13.04f,1.9f,z),new Vector3(.08f,1.5f,4.2f),Geometry.dark,transform,false);
-            for(int w=-1;w<=1;w++) Geometry.Box("Rain window",new Vector3(s*12.98f,1.9f,z+w*1.32f),new Vector3(.04f,1.34f,1.2f),Geometry.glass,transform,false);
             if(r.name.Contains("CLASSROOM")||r.name=="LECTURE 01")
             {
                 for(int x=-2;x<=2;x+=2)for(int row=-2;row<=2;row+=2)
-                { Geometry.Prop("schoolTable",c+new Vector3(x,0,row),1.35f,180,transform);Geometry.Prop("schoolChair",c+new Vector3(x,0,row+ .9f),.55f,180,transform); }
-                Geometry.Box("Teaching board",c+new Vector3(0,1.9f,-4.8f),new Vector3(5,1.5f,.06f),Geometry.trim,transform);
+                { Geometry.Prop("schoolTable",c+new Vector3(x,0,row),1.35f,0,transform);Geometry.Prop("schoolChair",c+new Vector3(x,0,row+ .9f),.55f,180,transform); }
+                CampusArt.Fit("School/board2",transform,c+new Vector3(0,1.9f,-4.78f),new Vector3(4.8f,1.5f,.055f));
                 Geometry.Text(r.name=="LECTURE 01"?"IDENTITY / CONTINUITY\nWhat makes a person the same person?":"PLEASE LEAVE THE ROOM\nAS YOU FOUND IT",c+new Vector3(0,1.9f,-4.75f),.11f,new Color(.75f,.78f,.65f),transform);
             }
             else if(r.name=="CAFETERIA")
             {
-                for(int a=-2;a<=2;a+=4){Geometry.Prop("tableRound",c+new Vector3(a,0,2),1.8f,0,transform);Geometry.Prop("chair",c+new Vector3(a,0,3.3f),.6f,180,transform);}
-                Geometry.Prop("kitchenCabinet",c+new Vector3(1,0,-3.6f),3,0,transform);Geometry.Prop("kitchenFridge",c+new Vector3(4,0,-3.6f),1,0,transform);
+                for(int a=-2;a<=2;a+=4){Geometry.Prop("tableRound",c+new Vector3(a,0,2),1.8f,0,transform);}
+                Geometry.Prop("kitchenCabinet",c+new Vector3(1,0,-3.6f),3,0,transform);Geometry.Prop("displayCounter",c+new Vector3(3.7f,0,-3.6f),1.6f,0,transform);
             }
             else if(r.name=="BATHROOM")
             {
-                for(int a=-2;a<=2;a+=2){Geometry.Prop("toilet",c+new Vector3(a,0,-3.5f),.7f,0,transform);Geometry.Box("Stall",c+new Vector3(a+ .8f,1.1f,-3),new Vector3(.1f,2.2f,2.5f),Geometry.trim,transform);}
-                Geometry.Prop("bathroomSink",c+new Vector3(1,0,1),1.4f,0,transform);
+                for(int a=-2;a<=2;a+=2){Geometry.Prop("toilet",c+new Vector3(a,0,-3.5f),.7f,180,transform);Geometry.Box("Stall",c+new Vector3(a+ .8f,1.1f,-3),new Vector3(.1f,2.2f,2.5f),Geometry.trim,transform);}
+                Geometry.Prop("bathroomSink",c+new Vector3(1,0,1),1.6f,0,transform);
             }
             else
             {
@@ -129,11 +135,11 @@ namespace NoCauseForAlarm
                 if(r.name=="STORES"||r.name=="MAINTENANCE")for(int a=0;a<3;a++)Geometry.Prop("cardboardBoxClosed",c+new Vector3(-2+a,0,3),.8f,0,transform);
             }
             Geometry.Prop("trashcan",c+new Vector3(-s*3.8f,0,3.8f),.45f,0,transform);
-            Geometry.Prop("extinguisher",c+new Vector3(-s*4.5f,0,-2.1f),.23f,0,transform);
+            Geometry.Prop("extinguisher",c+new Vector3(-s*4.83f,.85f,-2.3f),.65f,s<0?270:90,transform);
             if(r.name=="CAFETERIA")Geometry.Prop("vending",c+new Vector3(3.9f,0,3.9f),1.25f,180,transform);
-            if(r.name=="LECTURE 01")Geometry.Prop("lectern",c+new Vector3(-2.7f,0,-3.7f),.7f,0,transform);
+            if(r.name=="LECTURE 01")Geometry.Prop("lectern",c+new Vector3(-2.7f,0,-3.7f),1.05f,0,transform);
             if(r.name.Contains("CLASSROOM")||r.name=="LECTURE 01")
-            {Geometry.Prop("clock",c+new Vector3(3.6f,2.55f,-4.79f),.38f,0,transform);Geometry.Prop("book",c+new Vector3(0,.90f,0),.30f,0,transform);}
+            {Geometry.Prop("clock",c+new Vector3(3.6f,2.55f,-4.79f),.38f,0,transform);Geometry.Prop("book",c+new Vector3(0,.785f,0),.30f,0,transform);}
             if(r.name=="SECURITY")Geometry.Prop("radio",c+new Vector3(1,.82f,1.5f),.45f,0,transform);
             if(r.name=="STAFF OFFICE")Geometry.Prop("telephone",c+new Vector3(.3f,.82f,1),.28f,0,transform);
             if(r.index%2==0)for(int l=0;l<3;l++)Geometry.Prop("locker",new Vector3(s*2.35f,0,z+2.1f+l*.65f),.5f,s<0?90:270,transform);
@@ -145,20 +151,26 @@ namespace NoCauseForAlarm
         void PlaceEvidence(string id,string label,string room,Vector3 offset)
         {
             var p=FindRoom(room).center+offset;
-            if(offset.y>.5f&&room!="BATHROOM")Geometry.Box("Evidence pedestal",new Vector3(p.x,p.y*.5f-.03f,p.z),new Vector3(.62f,p.y-.06f,.5f),Geometry.wood,transform);
-            var g=Geometry.Box(label,p,new Vector3(.4f,.06f,.29f),Geometry.paper,transform);
+            // Clues sit on the existing school desks and washbasin; no overlapping pedestal.
+            GameObject g;
+            if(id=="fuel")g=Geometry.Shape(PrimitiveType.Cylinder,label,p+Vector3.up*.06f,new Vector3(.09f,.06f,.09f),Geometry.metal,transform,true);
+            else if(id=="bag")g=Geometry.Box(label,p,new Vector3(.32f,.34f,.22f),Geometry.wood,transform);
+            else g=Geometry.Box(label,p,id=="tissue"?new Vector3(.12f,.025f,.11f):new Vector3(.28f,.025f,.20f),Geometry.paper,transform);
             g.AddComponent<Interactable>().Setup("evidence","INSPECT "+label.ToUpper(),id);
         }
         void PlaceDevice(string id,string label,string room,Vector3 offset)
         {
-            var p=FindRoom(room).center+offset;var g=id=="cctv"||id=="computer"?Geometry.Prop("monitor",p-Vector3.up*.2f,.75f,0,transform):Geometry.Box(label,p,new Vector3(.65f,.46f,.18f),Geometry.metal,transform);
-            Geometry.Box("Screen",p+new Vector3(0,0,-.10f),new Vector3(.56f,.35f,.02f),Geometry.glow,transform,false);
+            var p=FindRoom(room).center+offset;
+            bool terminal=id=="cctv"||id=="computer";
+            if(!terminal)p=FindRoom(room).center+new Vector3(2,1.35f,4.82f);
+            var g=terminal?Geometry.Prop("monitor",FindRoom(room).center+new Vector3(1,.78f,1),.65f,0,transform):Geometry.Box(label,p,new Vector3(.65f,.46f,.18f),Geometry.metal,transform);
+            if(!terminal)Geometry.Text(id=="power"?"FUSE BANK / E-03":"EXTRACTION / E-03",p+new Vector3(0,.36f,-.11f),.06f,Color.white,transform,180);
             g.AddComponent<Interactable>().Setup(id,label,"");
         }
         void Candle(string room,bool haunted)
         {
-            var p=FindRoom(room).center+new Vector3(-3.8f,0,3.5f);Geometry.Box("Calibration table",p+Vector3.up*.24f,new Vector3(.8f,.48f,.8f),Geometry.wood,transform);
-            var g=Geometry.Shape(PrimitiveType.Cylinder,"30-second calibration candle",p+new Vector3(0,.65f,0),new Vector3(.14f,.15f,.14f),Geometry.paper,transform,true);
+            var p=FindRoom(room).center+new Vector3(-3.8f,0,3.5f);Geometry.Prop("desk",p,1.05f,0,transform);
+            var g=Geometry.Shape(PrimitiveType.Cylinder,"30-second calibration candle",p+new Vector3(0,.93f,0),new Vector3(.14f,.15f,.14f),Geometry.paper,transform,true);
             var c=g.AddComponent<TestCandle>();c.haunted=haunted;g.AddComponent<Interactable>().Setup("candle","LIGHT CALIBRATION CANDLE","");
         }
     }

@@ -9,6 +9,8 @@ using System.Runtime.InteropServices;
 public static class GameInput {
  [StructLayout(LayoutKind.Sequential)] public struct Point { public int X; public int Y; }
  [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr window);
+ [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr window, int command);
+ [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
  [DllImport("user32.dll")] public static extern bool ClientToScreen(IntPtr window, ref Point point);
  [DllImport("user32.dll")] public static extern void keybd_event(byte key, byte scan, uint flags, UIntPtr extra);
  [DllImport("user32.dll")] public static extern void mouse_event(uint flags,uint x,uint y,uint data,UIntPtr extra);
@@ -18,6 +20,7 @@ $projectPath = Split-Path -Parent $PSScriptRoot
 $process = Start-Process -FilePath (Join-Path $projectPath 'Builds\Windows\NO CAUSE FOR ALARM.exe') -ArgumentList '-screen-fullscreen 0 -screen-width 1280 -screen-height 720 -logFile Logs/InputCheck.log' -WorkingDirectory $projectPath -PassThru
 Start-Sleep -Seconds 5
 $process.Refresh()
+[GameInput]::ShowWindow($process.MainWindowHandle,9) | Out-Null
 [GameInput]::SetForegroundWindow($process.MainWindowHandle) | Out-Null
 $origin = New-Object GameInput+Point
 [GameInput]::ClientToScreen($process.MainWindowHandle,[ref]$origin) | Out-Null
@@ -41,6 +44,10 @@ function Capture-Game([string]$name) {
  $bitmap.Save((Join-Path $projectPath ('Artifacts\'+$name+'.png')))
  $graphics.Dispose();$bitmap.Dispose()
 }
+# Clicking the visible title bar gives Windows a real foreground activation before inputs.
+Click-Game 610 -12
+Start-Sleep -Milliseconds 500
+if ([GameInput]::GetForegroundWindow() -ne $process.MainWindowHandle) { throw 'Player did not receive focus; no gameplay input sent.' }
 Click-Game 280 423
 for($step=0;$step -lt 7;$step++) { Click-Game 1080 673 }
 Start-Sleep -Seconds 1

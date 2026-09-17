@@ -73,6 +73,7 @@ public static class OverhaulAssets
         {
             var root=new GameObject(name);var model=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(source+"props/"+name+".fbx"),root.transform);
             foreach(var r in model.GetComponentsInChildren<Renderer>())r.sharedMaterials=r.sharedMaterials.Select(m=>mat).ToArray();
+            if(name=="book")model.transform.Rotate(0,0,90,Space.World);
             var bounds=NoCauseForAlarm.CampusArt.LocalBounds(root.transform);
             model.transform.localPosition-=new Vector3(bounds.center.x,bounds.min.y,bounds.center.z);
             // Normalize the chair's real backrest to -Z, so +Z always means seated facing direction.
@@ -113,7 +114,7 @@ public static class OverhaulAssets
             if(changed)imp.SaveAndReimport();
         }
         string vintage="Assets/LocalLicensed/Vintage/ZNS3D/Vintage Living Room Game Pack";
-        foreach(var name in new[]{"wall_default","floor_small","ceiling_small","wall_with_small_door","wall_with_one_window","bookshelf","sofa_small","light_desk","curtain_1","carpet_1"})
+        foreach(var name in new[]{"wall_default","floor_small","ceiling_small","wall_with_small_door","wall_with_one_window","curtain_1","carpet_1"})
         {
             var g=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(vintage+"/Meshes/"+name+".fbx"));g.name=name;
             foreach(var r in g.GetComponentsInChildren<Renderer>())
@@ -130,9 +131,7 @@ public static class OverhaulAssets
             }
             PrefabUtility.SaveAsPrefabAsset(g,Local+"/"+name+".prefab");UnityEngine.Object.DestroyImmediate(g);
         }
-        var grip=UnityEngine.Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Art/Hands/LighterGrip.fbx"));
-        foreach(var r in grip.GetComponentsInChildren<Renderer>())r.sharedMaterials=r.sharedMaterials.Select(m=>Textured("WRAD skin","Assets/Art/Hands/arm_albedo_pale.png",null,Art)).ToArray();
-        PrefabUtility.SaveAsPrefabAsset(grip,Art+"/LighterGrip.prefab");UnityEngine.Object.DestroyImmediate(grip);
+        PrepareLighter();PrepareSchool();
         PrepareCity();AssetDatabase.SaveAssets();Inspect();Debug.Log("OVERHAUL_PREPARED");
     }
     static Material Plain(string name,string folder)

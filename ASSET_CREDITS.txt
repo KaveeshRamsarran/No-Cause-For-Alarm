@@ -1,61 +1,69 @@
-NO CAUSE FOR ALARM — asset provenance
+NO CAUSE FOR ALARM - asset provenance (1.1)
 
-School Classrooms Asset Pack
-Creator: Styloo / Styl0o_
-Source: https://styloo.itch.io/classroom-asset-pack
-License: Creative Commons Zero v1.0 Universal (CC0), as listed by the creator on the asset page, retrieved 2026-09-16.
-Attribution: Not required; voluntarily credited in game and here.
-Used: school tables, chairs, lectern, lockers, clock, book, radio, monitor, vending machine, fire extinguisher, telephone.
-Modifications: normalized scale, replacement muted materials and lighting.
-Creator's original import notes: Assets/ThirdParty/Styloo/Readme.txt.
+School assets - A.R.S|T.
+https://assetstore.unity.com/packages/3d/environments/school-assets-146253
+Free, Standard Unity Asset Store EULA. Downloaded via the owner's account.
+Used: school/office desks and chairs, cafeteria tables and seats, sink counters,
+display counters, lockers, shelving, notice boards, books, computers and fire equipment.
+Converted palette materials to URP, normalized dimensions and chair facing.
 
-Furniture Kit (2.0)
-Creator: Kenney
-Source: https://kenney.nl/assets/furniture-kit
-License: CC0 / http://creativecommons.org/publicdomain/zero/1.0/
-Attribution: Not required; voluntarily credited in game and here.
-Used: desks, chairs, tables, kitchen cabinets, refrigerator, bathroom fittings, shelves, computer monitor, boxes, waste bins.
+City People FREE Samples - Denys Almaral
+https://assetstore.unity.com/packages/3d/characters/city-people-free-samples-260446
+Free, Standard Unity Asset Store EULA.
+Used: nine adult weighted meshes for twelve roles, palette variants, authored
+male/female idle, walk, jogging, alternate idle and self-check clips.
+The ceiling creature is a distorted City People character. No priest is used.
+
+VINTAGE LIVING ROOM 3D GAME PACK - ZNS3D
+https://assetstore.unity.com/packages/3d/environments/vintage-living-room-3d-game-pack-314464
+Free, Standard Unity Asset Store EULA.
+Used: modular walls, floors, ceilings, windows, doors/frames and curtains.
+Converted HDRP textures/materials to URP, normalized to the campus collision shell.
+Furniture from this pack is not used in the current school.
+
+The Unity Store sources and their derived prefabs/clips remain local and are
+excluded from public source control. They are incorporated into the compiled game.
+Free store assets remain subject to https://unity.com/legal/as-terms.
+Restore through your own My Assets downloads and Tools/setup_graphics.ps1.
+
+Vintage Lighter - Slinc / Poly Haven
+https://polyhaven.com/a/vintage_lighter
+CC0 1.0 Universal: https://polyhaven.com/license
+Used: complete textured lighter, preserved lid hinge, converted FBX and URP maps.
+Downloaded 2026-09-17. There is no first-person hand mesh.
+License: Assets/ThirdParty/PolyHaven/LICENSE.txt.
+Source: SourceAssets/VintageLighter.blend; conversion: Tools/prepare_lighter.py.
+
+School Classrooms Asset Pack - Styloo / Styl0o_
+https://styloo.itch.io/classroom-asset-pack
+CC0, as listed by creator, verified 2026-09-16.
+Current supplemental props: clock, telephone, radio, vending machine.
+Earlier school furniture is superseded by School assets above.
+Original import notes: Assets/ThirdParty/Styloo/Readme.txt.
+
+Furniture Kit 2.0 - Kenney
+https://kenney.nl/assets/furniture-kit
+CC0: http://creativecommons.org/publicdomain/zero/1.0/
+Current supplemental props: toilets, waste bins and storage boxes.
 Original license: Assets/ThirdParty/Kenney/License.txt.
-Modifications: normalized scale, replacement muted materials and lighting.
-
-Original project assets
-Historical 1.0 character portrait mesh (superseded by City People): generated in Blender by Tools/create_portrait.py; source SourceAssets/Portrait.blend.
-Historical 1.0 face atlas (not used by the current cast): generated using the built-in OpenAI image-generation tool for this project, with twelve original fictional identities. Assets/Resources/Characters/FaceAtlas.png. Prompt and integration notes: Documentation/ART_DIRECTION.md. No reference-game face was supplied or copied.
-Campus layout and collision, character assembly and animation blending, creature deformation, lighter, effects and UI: project code. Current building surfaces and characters use the credited imported packs.
-Original ambience, drone and fallback sound effects: Tools/generate_audio.py. Deterministic synthesized PCM. Current footsteps use the separately credited owner-supplied recording.
-PA voice: original written dialogue rendered with the installed Windows System.Speech synthesizer. No actor recording or external voice clone.
-Story, dialogue, evidence and institution: original fictional content created for this project.
-
-Runtime dependencies
-Unity 6.4.7f1 and Universal Render Pipeline 17.4.0: Unity Technologies; Unity licensing terms apply.
-LegacyRuntime font: Unity built-in runtime font.
-
-No reference-game characters, models, music, logos or dialogue were copied.
-No paid assets were purchased. The following free Unity Store packs require an account and use the Standard Unity Asset Store EULA (https://unity.com/legal/as-terms). Raw pack files and derived prefabs/clips remain local and are excluded from public source control; they are incorporated into the compiled game.
-
-City People FREE Samples
-Creator: Denys Almaral
-Source: https://assetstore.unity.com/packages/3d/characters/city-people-free-samples-260446
-License: Standard Unity Asset Store EULA; free listing.
-Used: nine adult skinned models, palette variants for twelve cast assignments, native male/female idle, walk, jogging, alternate idle and self-check animations. Recolored for the game's lighting.
-
-VINTAGE LIVING ROOM 3D GAME PACK
-Creator: ZNS3D
-Source: https://assetstore.unity.com/packages/3d/environments/vintage-living-room-3d-game-pack-314464
-License: Standard Unity Asset Store EULA; free listing.
-Used: modular walls, floors, ceilings, windows, doors/frames, shelves, sofa, lamp and curtains. Converted HDRP materials to URP and normalized scale.
-
-WRAD ARMS
-Creator: wriks
-Source: https://wriks.itch.io/wrad-arms
-License: CC0, as stated on the creator's page.
-Used: textured right hand/forearm; extracted and posed in Blender for the lighter. Runtime wrist/raise animation and separate hinged lighter lid.
-License record: Assets/ThirdParty/WRAD/LICENSE.txt.
-Adapted source: SourceAssets/LighterGrip.blend.
 
 Walk On Concrete - Sound Effect for editing.mp3
 Supplied by the project owner, who confirmed free use on 2026-09-17.
-Used: ten trimmed concrete footfall samples, synchronized to player movement.
-Permission relies on the owner's confirmation; no independently verified CC0 claim is made. Source recording and derived audio files remain excluded from the public repository; the compiled game includes the samples.
+Used: ten trimmed footfall samples synchronized to player movement.
+Permission relies on the owner's confirmation; no independently verified CC0 claim
+is made. Recording and derived samples remain local; the compiled game includes them.
 
-Restoration and provenance details: Documentation/GRAPHICS_OVERHAUL.md.
+Original project content
+Campus layout/collision, original supply props, animated flame shader, creature
+adjustments, effects, UI, narrative, dialogue and game code were made for this project.
+Original ambience, drone and fallback effects: Tools/generate_audio.py, synthesized PCM.
+PA announcements: original dialogue rendered by local Windows System.Speech.
+Historical 1.0 portrait mesh and AI-generated face atlas remain in source history;
+the current cast uses the full City People heads, not that atlas.
+No characters, textures, music, logos or dialogue from the reference game were copied.
+No paid assets were purchased.
+
+Runtime dependencies
+Unity 6000.4.7f1 and URP 17.4.0: Unity Technologies; Unity terms apply.
+LegacyRuntime font: Unity built-in runtime font.
+Details and restoration: Documentation/GRAPHICS_OVERHAUL.md.

@@ -18,7 +18,11 @@ Four consequential actions advance the hour. Movement and brief questions are fr
 The notebook has a WAIT UNTIL NEXT HOUR option. At 18:00, use the transport doors
 at the north end of the main corridor to choose passengers and finish the day.
 
-Settings include volumes, brightness, sensitivity, FOV, graphics, subtitles,
+Collect supplies and return them to people who ask for help. Track deliveries in
+TAB > SUPPLIES / REQUESTS. Picking up supplies is free; delivery costs one action.
+
+Settings include fullscreen, borderless windowed, windowed, volumes, brightness,
+sensitivity, FOV, graphics, subtitles,
 analog effects and camera movement. Reduce the last two to zero for less motion.
 
 BUILD
@@ -30,9 +34,9 @@ Command: powershell -ExecutionPolicy Bypass -File Tools/build.ps1
 
 ASSETS AND CREDITS
 Styloo / School Classrooms Asset Pack, Kenney / Furniture Kit (CC0).
-City People models/animations (Denys Almaral), Vintage Living Room (ZNS3D):
+School assets (A.R.S|T.), City People (Denys Almaral), Vintage Living Room (ZNS3D):
 free Unity Store packs, Standard Unity Asset Store EULA.
-WRAD ARMS (wriks): CC0. Concrete footsteps: supplied by owner, free use confirmed.
+Vintage Lighter (Slinc / Poly Haven): CC0. No player hand or priest model. Concrete footsteps: supplied by owner, free use confirmed.
 Original code, story, lighter, effects and ambient sound.
 Full provenance: ASSET_CREDITS.txt. Development notes: DEVELOPMENT_LOG.md.
 

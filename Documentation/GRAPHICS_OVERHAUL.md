@@ -1,34 +1,42 @@
-# Graphics overhaul — 1.1
+# Graphics and interaction update - 1.1
 
-The cast now uses **City People FREE Samples**, the pack from the owner's Unity account. Twelve cast assignments use nine distinct adult meshes, with palette variants for repeated models. The security officer, caretaker, academics and maintenance worker have role-appropriate models. The ceiling creature uses a stretched and distorted City People model, keeping it consistent with the campus cast.
+The twelve cast assignments use nine adult meshes from **City People FREE Samples**, with native male/female idle, walk, jog and gesture clips blended onto humanoid avatars. The ceiling creature is a distorted City People character. The priest and first-person hand have been removed from the game and build resources.
 
-Humanoid avatars drive real skinned meshes. City People's male/female idle, walking and jogging clips blend with alternate idle poses during conversation and the pack’s self-check gesture for uneasy reactions. Movement remains controlled by the existing navigation and collision system; animation root motion cannot move a character through a door. Animation pauses with menus, and the original investigation rules remain intact.
+The player's lighter is **Vintage Lighter by Slinc / Poly Haven**. It has textured metal surfaces, an opening lid and an animated flame with a blue base, warm core, soft edges and a wavering tip. Calibration candles use the same animated effect. The supplied concrete recording provides ten short footfall variations; walking and sprinting choose different timing and volume.
 
-The first-person hand comes from **WRAD ARMS**. Its original textured topology is posed in Blender for the lighter, with wrist movement, raising/lowering and a moving lighter lid. The supplied MP3 is divided into ten brief footfall variations, selected without consecutive repeats and timed to walking/sprinting. This prevents a full walking recording from continuing after a single step.
+## Furniture and placement
 
-The building uses **Vintage Living Room** wall, floor, ceiling, window, door leaf and frame meshes, converted from HDRP materials to URP. Offices also use its shelves, curtains, lamp and sofa. These visual modules cover the existing collision shell so the campus layout and access gates are preserved. The school furniture from Styloo and Kenney remains. The lectern has been reduced to classroom scale. Emergency sconces have a wall-facing local frame instead of a wide ceiling-light mesh intersecting the partitions.
+**School assets by A.R.S|T.**, the exact requested pack, supplies desks, chairs, cafeteria tables and attached stools, sink counters, display counters, lockers, shelving, boards, books, computer props and extinguishers. Chair backrests are normalized from their actual mesh geometry so seats face the desks. The pack has no toilet model; the existing CC0 Kenney toilets remain and have been turned to face the open stalls. Supplemental clocks, bins, telephone, radio and vending-machine props remain from the earlier CC0 packs.
 
-## Assets and use rights
+Vintage Living Room supplies walls, floors, ceilings, windows, doors/frames and curtains. Its office furniture has been replaced with the school pack. The classroom lectern is now a compact school desk at a sensible teaching height. Emergency sconces face into the room and clear the wall. Clues and supplies sit on real furniture; overlapping evidence pedestals were removed. Wall controls have readable labels and mounts.
 
-No paid assets were purchased or downloaded.
+## Play changes
 
-| Asset | Source / license | Distribution |
-|---|---|---|
-| City People FREE Samples — Denys Almaral | [Official free listing](https://assetstore.unity.com/packages/3d/characters/city-people-free-samples-260446), Standard Unity Asset Store EULA | Used in the game; raw pack and derived prefabs remain local |
-| Vintage Living Room — ZNS3D | [Official free listing](https://assetstore.unity.com/packages/3d/environments/vintage-living-room-3d-game-pack-314464), Standard Unity Asset Store EULA | Used in the game; raw pack and derived prefabs remain local |
-| WRAD ARMS — wriks | [Creator page](https://wriks.itch.io/wrad-arms), CC0 | Adapted hand mesh, texture and license included |
-| Walk On Concrete - Sound Effect for editing.mp3 | Supplied by project owner, who confirmed “it is free to use” on 2026-09-17 | Included as derived footfall samples in the local/game build; source audio is not redistributed in the repository |
+- Settings offer exclusive fullscreen, borderless windowed and ordinary windowed display modes. Apply and Return saves the selection.
+- Characters have individual greetings, request reminders and specific responses when an item is delivered.
+- Nine physical supplies can be picked up, carried, saved and delivered: radio batteries, a key sign-out book, a fuse, sample kit, USB drive, inhaler, can opener, cassette and insulated gloves.
+- Help requests grant access, evidence, repairs or health. Supplies disappear when collected and are consumed on delivery. Repeating a completed request cannot duplicate its reward.
+- The notebook has a Supplies / Requests page. Asking what someone needs and picking up supplies are free; completing a request uses one action. Evidence-based requests still require the matching documents.
 
-The MP3's use is based on the owner's confirmation, not an independently verified CC0 license. A matching Sound Library upload is at https://www.youtube.com/watch?v=yHDh_GDHKKI; its description does not establish the original recording's creator or exact license. Keep the owner's source/license record with release documentation.
+## Free assets and provenance
 
-The [Unity Asset Store EULA](https://unity.com/legal/as-terms) permits incorporated game use under its conditions and does not turn free Store downloads into freely redistributable source packs. Accordingly, `Assets/LocalLicensed` and `Assets/Resources/LocalLicensed` are excluded from this public repository. Screenshots and the compiled game can show the integrated art. The original CC0 Styloo/Kenney credits remain in `ASSET_CREDITS.txt`.
+| Asset | Source and terms |
+|---|---|
+| City People FREE Samples - Denys Almaral | https://assetstore.unity.com/packages/3d/characters/city-people-free-samples-260446 - free, Standard Unity Asset Store EULA |
+| School assets - A.R.S\|T. | https://assetstore.unity.com/packages/3d/environments/school-assets-146253 - free, Standard Unity Asset Store EULA |
+| Vintage Living Room - ZNS3D | https://assetstore.unity.com/packages/3d/environments/vintage-living-room-3d-game-pack-314464 - free, Standard Unity Asset Store EULA |
+| Vintage Lighter - Slinc / Poly Haven | https://polyhaven.com/a/vintage_lighter - CC0, https://polyhaven.com/license |
+| Styloo School Classrooms / Kenney Furniture | Existing CC0 supplemental props; see ASSET_CREDITS.txt |
+| Supplied concrete footstep MP3 | Project owner confirmed free use on 2026-09-17. This is owner-provided permission, not an independently verified CC0 license. |
+
+No paid assets were purchased. Asset Store packs are free to acquire under their EULA; their raw files and derived prefabs/clips remain local in ignored LocalLicensed folders. The compiled game includes the incorporated artwork. The CC0 lighter mesh, textures and attribution are included in source control. Owner-supplied audio sources and derived samples stay local but are incorporated into the game build.
 
 ## Restore the graphics on another workstation
 
-1. Add/download the two free Unity Store packs above in Unity's **My Assets** using your own account.
-2. Install Python dependencies with `python -m pip install numpy scipy soundfile`.
-3. Run `powershell -ExecutionPolicy Bypass -File Tools/setup_graphics.ps1`. This imports the cached packs, downloads only the free CC0 hand archive if required, poses the hand with Blender, and prepares URP prefabs and humanoid clips.
-4. To use the owner's recording locally, run `python Tools/prepare_footsteps.py "PATH/Walk On Concrete - Sound Effect for editing.mp3"`. Without these local samples the existing original synthesized step remains a fallback.
-5. Build with `Tools/build.ps1`. Open `Assets/Scenes/EastWing.unity` to play in the editor.
+1. Download the three free Unity Store packs above through your account's My Assets.
+2. Install Unity 6000.4.7f1, Blender, and Python with `numpy scipy soundfile`.
+3. Run `powershell -ExecutionPolicy Bypass -File Tools/setup_graphics.ps1`. This imports cached art, downloads the CC0 lighter if necessary, converts it in Blender and prepares Unity materials/prefabs/animations.
+4. To restore the supplied recording, run `python Tools/prepare_footsteps.py "PATH/Walk On Concrete - Sound Effect for editing.mp3"`. Otherwise footsteps use the original synthesized fallback.
+5. Run `Tools/build.ps1`, or open `Assets/Scenes/EastWing.unity` in Unity.
 
-`Tools/graphics-test.ps1` runs the opt-in graphics review. It uses a separate save, checks imported meshes/avatars/animation movement and records screenshots. `Tools/smoke-test.ps1` exercises the complete investigation and door traversal after the overhaul.
+The downloadable Windows build is already prepared. `Tools/graphics-test.ps1` checks character animations and graphics placements, and captures review images. `Tools/smoke-test.ps1` checks the investigation, deliveries, save/load and door traversal. Both use separate test saves.

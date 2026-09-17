@@ -26,6 +26,28 @@ namespace NoCauseForAlarm
             new Person("Dr. Mara Ellis", "Chemistry lecturer", "STAFF OFFICE", "I was marking in the staff office. Venn called, asked if I still had the old protocol.", "We called it a ventilation study. The grant required fewer questions than it paid for.", "The sealed report is in the restricted archive. Venn's signature is on every page.", "Fear of fire is common. A reaction without a control proves very little.", "The reference candle is calibrated to thirty seconds. Compare it with the one in Classroom 03.", new Color(.34f,.31f,.38f)),
             new Person("Sol Mercer", "Maintenance contractor", "MAINTENANCE", "I checked the ductwork at eight. There wasn't enough clearance for anyone to get inside.", "I invoiced for a sealed hatch. I never sealed it. Someone told me to leave it accessible.", "Ada knows which breaker controls the old extraction fans. They don't appear on the new plans.", "Don't bring it under the vent. Just don't.", "Close the extraction damper in Maintenance after you find the source.", new Color(.40f,.40f,.29f))
         };
+        static readonly string[] Greetings={
+            "You're still here. Good. I know how that sounded in the lecture. Sit down if you need to. I'll answer what I can.",
+            "Are you hurt? No? All right. Stay where I can see you for a second. The radio keeps cutting out.",
+            "Mind the boxes, love. I've been trying to find the spare keys. They were right here this morning.",
+            "Sorry, I thought you were Sol. Does the light in the corridor keep dipping, or is it just this room?",
+            "If you're bleeding, tell me now. Otherwise... give me a moment. Ben's only just settled down.",
+            "Please tell me you've heard something from outside. My phone says I've got signal, but nothing goes through.",
+            "I've counted everyone three times. I get a different number when people keep changing rooms. Can you stand still for a minute?",
+            "Could you keep that lighter shut while we're talking? I'm listening. I just can't look at it.",
+            "Did Venn send you? Never mind. If you find anything with the number nineteen on it, I need to see it.",
+            "You eaten today? Sorry. Stupid question, with all this going on. I keep thinking I should put the kettle on.",
+            "Close the door if you can. I can't hear myself think with that announcement. What did Elias tell you?",
+            "Don't stand under that vent. Here, beside the desk. I know how it sounds. Just humour me."
+        };
+        public static string Greeting(int id,GameState state)
+        {
+            var person=state.people[id];
+            if(person.helpRequested&&!person.helped)return HelpRequests.Ready(id,state)?"You found it? Thank you. Let me have a look.":"Any luck? "+HelpRequests.Request(id);
+            if(state.hour>=17)return id==7?"Is the bus really here? I don't want to go out there on my own.":"They keep saying six o'clock. Have you actually seen a driver?";
+            if(person.helped)return "You're back. "+HelpRequests.Thanks(id);
+            return Greetings[id];
+        }
         public static readonly string[] Hours = {
             "11:00 | ATTENDANCE DISCREPANCY\nA bag has been found in Classroom 03. Its owner is absent from every register.",
             "12:00 | INTERIM REVIEW\nSecurity requests a name. You may detain someone, or keep investigating. Silence also has a cost.",

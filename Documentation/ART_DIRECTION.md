@@ -1,6 +1,6 @@
 # NO CAUSE FOR ALARM — art direction
 
-**1.1 update:** The current cast uses full City People models and native authored animations. Vintage Living Room supplies building surfaces and doors; WRAD supplies the player hand. The green/olive lighting, close framing and restrained analog treatment remain. See [the current overhaul record](GRAPHICS_OVERHAUL.md). The sections below document the historical 1.0 portrait approach and are superseded where they describe current character meshes or architecture.
+**1.1 update:** The current cast uses full City People models and native authored animations. School assets supplies the furniture; Vintage Living Room supplies building surfaces and doors; Poly Haven supplies the lighter. The first-person hand and priest are removed. The green/olive lighting, close framing and restrained analog treatment remain. See [the current overhaul record](GRAPHICS_OVERHAUL.md). The sections below document the historical 1.0 portrait approach and are superseded where they describe current character meshes or architecture.
 
 The user's reference is *No, I'm not a Human*. We use broad visual qualities: uncomfortable close framing, sallow green lighting, rough photographic skin, asymmetric faces, constrained color, and an ordinary interior made oppressive. We do not use the reference game's characters, textures, scenes, logos, writing, UI artwork, or recordings.
 

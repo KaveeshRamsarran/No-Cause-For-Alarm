@@ -5,13 +5,16 @@ namespace NoCauseForAlarm
     {
         public static string Name(string id)
         {
-            switch(id){case "key":return "Staff-office key";case "register":return "Attendance register";case "bag":return "The unclaimed bag";case "tissue":return "Translucent tissue";case "photo":return "Cohort 19 / photograph";case "report":return "Ventilation study / sealed report";case "maintenance":return "Unfinished work order";case "fuel":return "Refill tin / empty";case "medical":return "First-aid incident card";case "cctv":return "East corridor / camera archive";case "files":return "Recovered access log";case "analysis":return "Sample comparison";case "flame":return "Classroom 03 / flame observation";default:return id;}
+            switch(id){case "attendance":return "Mara's register annotations";case "recording":return "Cohort 19 / cassette transcript";case "protocol":return "Matched candle calibration";case "key":return "Staff-office key";case "register":return "Attendance register";case "bag":return "The unclaimed bag";case "tissue":return "Translucent tissue";case "photo":return "Cohort 19 / photograph";case "report":return "Ventilation study / sealed report";case "maintenance":return "Unfinished work order";case "fuel":return "Refill tin / empty";case "medical":return "First-aid incident card";case "cctv":return "East corridor / camera archive";case "files":return "Recovered access log";case "analysis":return "Sample comparison";case "flame":return "Classroom 03 / flame observation";default:return id;}
         }
         public static string Describe(string id,GameState s)
         {
             int a=Enumerable.Range(1,4).First(i=>s.people[i].infiltrator);int b=Enumerable.Range(5,3).First(i=>s.people[i].infiltrator);int c=Enumerable.Range(8,4).First(i=>s.people[i].infiltrator);
             switch(id)
             {
+                case "attendance":return "Mara compared the signatures beside you. The two entries for "+Cast.All[b].name+" use different letter shapes and pen pressure. She remembers only one arrival. Her own alteration concerns her sister; it does not explain the duplicate badge in the access log.";
+                case "recording":return "June recognised her brother's voice on the cassette: 'We asked to leave. Dr. Venn said the doors would open after the next reading.' A second voice counts nineteen people. June wrote down the time and kept the original tape. This corroborates the sealed study's account of continued exposure.";
+                case "protocol":return "Ellis matched the bag's candle sleeve to the office reference batch. Both are thirty-second calibration candles. Use the office candle as a control, then observe the candle in Classroom 03. A prolonged flame is grounds to investigate the ventilation, not to accuse a frightened person.";
                 case "key":return "Ada's brass key. STAFF OFFICE is punched into its label. The archive uses a separate electronic lock.";
                 case "register":return "Twelve names. "+Cast.All[b].name+" signed at 08:52 and again at 09:07, in different handwriting. Mara has crossed out a thirteenth name. A duplicate signature might be a favour, or a mistake.";
                 case "bag":return "A damp bag beneath a dry ceiling. The timetable belongs to a course discontinued twenty years ago. Inside: a candle sleeve marked CALIBRATION / 30 SECONDS. There are fingernail marks on the zip.";

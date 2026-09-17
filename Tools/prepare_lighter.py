@@ -33,6 +33,15 @@ save('LighterNormal',normal,size)
 for o in bpy.data.objects:
     if o.type=='MESH':
         print(o.name,'rotation',tuple(o.rotation_euler),'bounds',[(round(min((o.matrix_world@__import__('mathutils').Vector(c))[i] for c in o.bound_box),4),round(max((o.matrix_world@__import__('mathutils').Vector(c))[i] for c in o.bound_box),4)) for i in range(3)])
+bpy.data.objects['vintage_lighter_hinge'].rotation_euler.y=0
 bpy.ops.export_scene.fbx(filepath=str(out/'VintageLighter.fbx'),object_types={'MESH'},add_leaf_bones=False,bake_anim=False,axis_forward='-Z',axis_up='Y')
+for material in bpy.data.materials:
+    if material.node_tree:
+        for node in material.node_tree.nodes:
+            if node.type=='TEX_IMAGE' and node.image:
+                key=node.image.name.split('.')[0].replace('vintage_lighter_','')
+                extension='jpg' if key=='diff' else 'png' if key=='alpha' else 'exr'
+                path=source/'textures'/('vintage_lighter_'+key+'_1k.'+extension)
+                if path.exists():node.image=bpy.data.images.load(str(path),check_existing=False);node.image.pack()
 bpy.ops.wm.save_as_mainfile(filepath=str(root/'SourceAssets/VintageLighter.blend'))
 print('VINTAGE_LIGHTER_READY')

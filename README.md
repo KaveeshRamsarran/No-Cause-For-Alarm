@@ -4,7 +4,9 @@ A first-person psychological horror game set during a college lockdown. Talk to 
 
 ![City People character conversation in the east wing](Documentation/Screenshots/conversation.png)
 
-Version **1.1.0** adds animated City People characters, imported modular building surfaces and doors, a textured first-person hand, and the supplied concrete footsteps. The classroom podium is smaller and the emergency sconces sit clear of the walls.
+Version **1.1.0** adds animated City People characters, the requested School assets furniture, imported building surfaces and doors, and a free Poly Haven lighter with animated flames. The hand and priest are removed. Chairs face desks, toilets face the open stalls, and wall fixtures have clearance.
+
+Find and deliver nine supplies to help the people inside: batteries, a fuse, an inhaler and more. The notebook tracks requests and your inventory. Settings now offer fullscreen, borderless windowed and windowed modes.
 
 ## Play on Windows
 
@@ -22,7 +24,7 @@ Version **1.1.0** adds animated City People characters, imported modular buildin
 | M | Campus directory |
 | Esc | Pause or close the current screen |
 
-Four consequential actions advance each hour. Walking, reading notes, and brief questions are free. The notebook lets you wait for the next hour. At 18:00, visit the north/east end of the main corridor and interact with the transport doors to choose passengers. Wrongful detention removes useful help and changes the ending.
+Four consequential actions advance each hour. Walking, reading notes, asking what someone needs and picking up supplies are free. Completing a help request costs one action. The notebook lets you wait for the next hour. At 18:00, visit the north/east end of the main corridor and interact with the transport doors to choose passengers. Wrongful detention removes useful help and changes the ending.
 
 Settings include master, drone and SFX/voice levels, sensitivity, brightness, FOV, graphics, subtitles, analog effects and camera movement. Set the last two to zero to reduce motion and flicker. Critical clues are written in the notebook regardless of subtitle settings.
 
@@ -30,7 +32,7 @@ Settings include master, drone and SFX/voice levels, sensitivity, brightness, FO
 
 Use Unity **6000.4.7f1** with Windows Build Support. Open this repository in Unity Hub. The project uses **URP 17.4.0**; let Package Manager finish resolving packages on first import.
 
-Restore the two free Unity Store packs and prepare their materials/animations using [the graphics setup instructions](Documentation/GRAPHICS_OVERHAUL.md#restore-the-graphics-on-another-workstation). Their source files are excluded from the public repository under the Asset Store license; the downloadable game already includes the integrated art.
+Restore the three free Unity Store packs and prepare their materials/animations using [the graphics setup instructions](Documentation/GRAPHICS_OVERHAUL.md#restore-the-graphics-on-another-workstation). Their source files are excluded from the public repository under the Asset Store license; the downloadable game already includes the integrated art.
 
 Open `Assets/Scenes/EastWing.unity`, then enter Play mode. The campus is assembled by its bootstrap component. To rebuild, choose **NO CAUSE FOR ALARM → Configure and build Windows**, or run:
 
@@ -52,6 +54,6 @@ See [QA](Documentation/QA.md), [design and ending rules](Documentation/DESIGN.md
 
 ## Credits
 
-Free packs used: **City People FREE Samples** and **Vintage Living Room** under the Unity Asset Store EULA; **WRAD ARMS**, **Styloo School Classrooms**, and **Kenney Furniture** under CC0. Footsteps use the supplied recording with the owner's confirmation of free use. Sources and terms are recorded in [ASSET_CREDITS.txt](ASSET_CREDITS.txt).
+Free packs used: **School assets**, **City People FREE Samples** and **Vintage Living Room** under the Unity Asset Store EULA; **Poly Haven Vintage Lighter**, plus supplemental **Styloo** and **Kenney** props under CC0. Footstep permission is based on the owner's confirmation. See [ASSET_CREDITS.txt](ASSET_CREDITS.txt).
 
-Generated `Library`, `Temp`, logs, test screenshots and unpacked builds are excluded from source control. Redistributable assets, their `.meta` files, package lock, project settings, build/setup scripts and the adapted CC0 hand's Blender source are tracked. Asset Store art and owner-supplied audio sources remain local.
+Generated `Library`, `Temp`, logs, test screenshots and unpacked builds are excluded from source control. Redistributable assets, their `.meta` files, package lock, project settings, build/setup scripts and the CC0 lighter's Blender source are tracked. Asset Store art and owner-supplied audio sources remain local.

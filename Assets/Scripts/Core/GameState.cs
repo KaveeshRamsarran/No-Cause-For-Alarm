@@ -7,7 +7,7 @@ namespace NoCauseForAlarm
 {
     [Serializable] public class PersonState
     {
-        public bool infiltrator, detained, missing, dead, tested, helped;
+        public bool infiltrator, detained, missing, dead, tested, helped,helpRequested;
         public int trustTag, conversations;
         public List<string> observations = new List<string>();
     }
@@ -21,6 +21,7 @@ namespace NoCauseForAlarm
         public PersonState[] people;
         public List<string> evidence = new List<string>();
         public List<string> journal = new List<string>();
+        public List<string> inventory = new List<string>(),collected = new List<string>();
         public List<int> evacuation = new List<int>();
         public float px = -8, py = 1.05f, pz = 3, yaw = 180;
 
@@ -84,7 +85,7 @@ namespace NoCauseForAlarm
         }
         public static GameState Load()
         {
-            try { var s = JsonUtility.FromJson<GameState>(System.IO.File.ReadAllText(Path)); return s != null && s.Valid() ? s : null; }
+            try { var s = JsonUtility.FromJson<GameState>(System.IO.File.ReadAllText(Path));if(s!=null){s.inventory??=new List<string>();s.collected??=new List<string>();} return s != null && s.Valid() ? s : null; }
             catch (Exception) { return null; }
         }
     }

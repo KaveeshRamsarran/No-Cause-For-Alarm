@@ -1,33 +1,26 @@
-# NO CAUSE FOR ALARM — validation record
+# NO CAUSE FOR ALARM - 1.1 validation
 
-Validated on 2026-09-16 using Unity 6000.4.7f1, Windows x64 and an NVIDIA GeForce RTX 3060.
+Validated on 2026-09-17 using Unity 6000.4.7f1, Windows x64 and an NVIDIA GeForce RTX 3060.
 
-## Results
+## Checks
 
-- Windows standalone build succeeded. Packaged player size is approximately 101 MB unpacked and 38 MB zipped.
-- **7,010 story assertions passed**, covering 1,000 seeds, constrained identities, generated clues, JSON roundtrips, power loss, the complete action clock and all six endings.
-- **44 standalone checks passed**, including twelve physical doorway traversals, ten non-black rendered screenshots, opening-to-play transition, access gates, helper rewards, the reference and supernatural candles, the ceiling breach, containment, power repair, manifest, ending, save/continue and restart.
-- A second chronological run used ordinary interactions and the action economy from 10:00 to 18:00. It collected combined evidence, confronted Venn, contained the ceiling organism, detained the infiltrators and reached the survival ending. This run did not set the clock or inject evidence.
-- Native keyboard/mouse automation used the ordinary menu and opening, moved the player, ignited the lighter, paused/resumed, opened the notebook and directory, and exited. Movement and fuel consumption were read back from the actual save file.
-- The final standalone harness reported **zero errors or runtime exceptions**.
+- Windows build succeeds; 7,010 story assertions cover 1,000 seeds and all six endings.
+- 67 standalone integration checks cover twelve doorway traversals, the opening, locked rooms, evidence, both candles, ceiling encounter/containment, power repair, evacuation, ending, save/load and restart.
+- The integration run checks all nine physical supplies, inventory persistence, item consumption, successful help deliveries and duplicate-reward prevention. A second chronological investigation reaches the survival ending through ordinary actions without setting the clock or injecting clues.
+- 224 graphics checks cover imported humanoid avatars, authored animation movement, natural arm poses, requested School assets usage, correct chair backrests, podium dimensions, all seventeen emergency sconces, supply support surfaces and furniture/wall clearance.
+- Exclusive fullscreen, borderless windowed and windowed modes are applied in the standalone player and verified through Screen.fullScreenMode. Each selection survives Preferences.Save/Load.
+- The hand and priest are absent from game Resources. The lighter is the actual Poly Haven mesh with moving lid and animated flame. Candles share the animated flame effect.
 
-Measured during the rendered test at 1280×720, medium settings: **16.67 ms median and 16.67 ms p95 frame time**, with **115 MiB Unity allocated memory**. These figures describe this machine and scripted route, not a minimum-spec guarantee or whole-system RAM measurement.
+Reports: [story](Validation/story.txt), [graphics and display](Validation/graphics.txt), [standalone gameplay](Validation/standalone.txt), [native input](Validation/input.txt).
 
-Machine-readable reports: [story](Validation/story.txt), [standalone](Validation/standalone.txt), [native input](Validation/input.txt).
+Visual review images: [classroom](Screenshots/classroom.png), [bathroom](Screenshots/bathroom.png), [lighter](Screenshots/lighter.png), [candle](Screenshots/candle.png), [requests](Screenshots/requests.png), [settings](Screenshots/settings.png).
 
-Screenshots: [menu](Screenshots/menu.png), [conversation](Screenshots/conversation.png), [classroom](Screenshots/classroom.png).
+## Issues corrected
 
-## Issues found and corrected
+Removed the mismatched priest and the first-person hand at the owner's request. Cross-pack acting was replaced with City People's own clips. The requested school pack now supplies furniture; chairs face desks and toilets face the open stalls. Fire cabinets and fuse/damper controls are mounted to walls, windows no longer overlap older window panels, emergency lights clear partitions, and clues/supplies sit on desks or counters. Introductory actors stand in clear aisles. The evidence list scrolls when the new clues exceed its visible area.
 
-World text was initially mirrored, too large and drawn through walls. A dedicated depth-tested shader and corrected scale/orientation fixed it. The first portrait pass lost the FBX axis rotation; retaining the imported transform fixed the head projection. Flame emission now uses a dedicated shader to avoid runtime keyword stripping. A candle was moved away from a chair. NPC paths now route through doorway centers and around classroom furniture. Escape handling was centralized after native input testing found immediate re-pausing. Ambient ballast audio now follows SFX volume and power state.
+## Limits
 
-## Remaining limits
+The 45-90 minute first-playthrough target still needs human pacing tests. Scripted checks accelerate candle waiting and move between some interactions. Conversations are written; PA announcements use local synthesized speech. Tests cover this Windows machine rather than a broad hardware matrix. URP can reduce shadow atlas resolution automatically. A graphics-driver timestamp warning was observed during display switching; the mode checks completed successfully. Saving resets transient pursuers and candle timing.
 
-- The 45–90 minute initial-playthrough target has not been measured with human players. The test harness accelerates candle waiting and moves directly between some interactions; it is not a timing study or a substitute for subjective horror/balance testing.
-- Character acting is procedural, and conversations are written rather than fully voiced. PA announcements are synthesized speech.
-- CCTV presents authored archive observations beside a live reference view. It is not a collection of fully animated recorded sequences.
-- Saving preserves investigation state but resets transient pursuers and candle animation on continue.
-- URP may report that it reduces punctual shadow resolution to fit the shadow atlas. The renderer handles this automatically; it did not prevent play or fail the performance checks.
-- There is no rebinding screen or broad hardware/display compatibility matrix yet.
-
-The deliverable is a complete playable investigation loop with a Windows build. These limits remain visible rather than being represented as commercial-release QA.
+Free Asset Store art is incorporated in the build but excluded from public raw source. Follow GRAPHICS_OVERHAUL.md to restore it on another workstation. The supplied footstep recording is used on the owner's confirmation of free use.

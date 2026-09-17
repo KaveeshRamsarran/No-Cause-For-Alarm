@@ -6,8 +6,10 @@ namespace NoCauseForAlarm
     public class GameUI:MonoBehaviour
     {
         GameDirector G=>GameDirector.I;
+        public void OpenRequests(){tab=3;scroll=Vector2.zero;G.Mode=ScreenMode.Notebook;}
+        public void OpenEvidence(){tab=1;scroll=evidenceScroll=Vector2.zero;G.Mode=ScreenMode.Notebook;}
         readonly Color cream=new Color(.94f,.92f,.84f),muted=new Color(.72f,.76f,.69f),amber=new Color(.86f,.72f,.42f),ink=new Color(.035f,.048f,.047f,.97f);
-        GUIStyle label,small,title,button,body;int tab,evidenceIndex;Vector2 scroll;Texture2D pixel;bool ready,hasSave;float nextSaveCheck;
+        GUIStyle label,small,title,button,body;int tab,evidenceIndex;Vector2 scroll,evidenceScroll;Texture2D pixel;bool ready,hasSave;float nextSaveCheck;
         void Init()
         {
             if(ready)return;ready=true;pixel=Texture2D.whiteTexture;
@@ -111,7 +113,8 @@ namespace NoCauseForAlarm
             Text("ASK. WATCH. REMEMBER.",842,129,370,27,small);
             if(Button("Where were you?  /  free",842,175,370))G.Question(0);
             if(Button("Who did you see?  /  free",842,230,370))G.Question(1);
-            if(Button("Ask for help  /  1 action",842,285,370))G.Question(4);
+            string help=G.State.people[id].helped?"Follow up / free":HelpRequests.Ready(id,G.State)?"Complete request / 1 action":"Ask for help / free";
+            if(Button(help,842,285,370))G.Question(4);
             GUI.enabled=G.State.evidence.Count>0;if(Button("Press a contradiction  /  1 action",842,340,370))G.Question(2);GUI.enabled=true;
             if(Button("Controlled flame  /  1 action",842,395,370))G.Question(3);
             if(Button("Accuse  /  1 action",842,450,370))G.Question(5);
@@ -122,9 +125,10 @@ namespace NoCauseForAlarm
         void Notebook()
         {
             Panel("STUDENT CASE FILE  /  SUBJECTIVE NOTES ARE NOT VERDICTS","The attendance of the living");
-            if(Button("PEOPLE",60,185,220)) {tab=0;scroll=Vector2.zero;}
-            if(Button("EVIDENCE  /  "+G.State.evidence.Count,294,185,260)){tab=1;scroll=Vector2.zero;}
-            if(Button("CHRONOLOGY",568,185,240)){tab=2;scroll=Vector2.zero;}
+            if(Button("PEOPLE",60,185,180)) {tab=0;scroll=Vector2.zero;}
+            if(Button("EVIDENCE / "+G.State.evidence.Count,254,185,205))OpenEvidence();
+            if(Button("CHRONOLOGY",473,185,210)){tab=2;scroll=Vector2.zero;}
+            if(Button("SUPPLIES / REQUESTS",697,185,285))OpenRequests();
             if(Button("CLOSE  /  ESC",1000,185,220))G.Mode=ScreenMode.Play;
             if(tab==0)
             {
@@ -139,10 +143,30 @@ namespace NoCauseForAlarm
             }
             else if(tab==1)
             {
-                for(int i=0;i<G.State.evidence.Count;i++)if(Button(EvidenceText.Name(G.State.evidence[i]),60,242+i*29,320,27)){evidenceIndex=i;scroll=Vector2.zero;}
+                evidenceScroll=GUI.BeginScrollView(new Rect(60,242,332,379),evidenceScroll,new Rect(0,0,310,Mathf.Max(378,G.State.evidence.Count*32)));
+                for(int i=0;i<G.State.evidence.Count;i++)if(Button(EvidenceText.Name(G.State.evidence[i]),0,i*32,309,30)){evidenceIndex=i;scroll=Vector2.zero;}
+                GUI.EndScrollView();
                 if(G.State.evidence.Count>0)
                 {evidenceIndex=Mathf.Clamp(evidenceIndex,0,G.State.evidence.Count-1);string id=G.State.evidence[evidenceIndex];Text(EvidenceText.Name(id).ToUpper(),410,254,780,65,new GUIStyle(title){fontSize=29});Text(EvidenceText.Describe(id,G.State),410,345,765,270,body);}
                 else Text("No physical evidence filed yet.",410,266,780,100,body);
+            }
+            else if(tab==3)
+            {
+                Text("CARRYING",60,248,320,30,small);
+                if(G.State.inventory.Count==0)Text("No supplies in your bag. Ask people what they need, then search the rooms they mention.",60,291,315,130,body);
+                for(int i=0;i<G.State.inventory.Count;i++)Text(HelpRequests.Name(G.State.inventory[i]),60,290+i*32,320,31,label);
+                int count=0;foreach(var person in G.State.people)if(person.helpRequested||person.helped)count++;
+                scroll=GUI.BeginScrollView(new Rect(410,250,790,368),scroll,new Rect(0,0,755,Mathf.Max(366,count*104)));
+                int row=0;
+                for(int i=0;i<12;i++)
+                {
+                    var person=G.State.people[i];if(!person.helpRequested&&!person.helped)continue;
+                    string item=HelpRequests.Item(i);string status=person.helped?"COMPLETED":!G.State.Available(i)?"PERSON UNAVAILABLE":HelpRequests.Ready(i,G.State)?"READY TO RETURN":"LOOKING FOR SUPPLIES";
+                    Text(Cast.All[i].name+" / "+status,0,row*104,740,29,label);
+                    Text(person.helped?"Your delivery and their response are recorded under People.":HelpRequests.Ready(i,G.State)?"Return to "+Cast.All[i].name+" / "+G.Campus.Location(G.Campus.actors[i].transform.position)+". Choose Complete request.":item!=""?HelpRequests.Name(item)+" - "+HelpRequests.Location(item)+(i==4?"; also collect the bathroom tissue.":"."):i==0?"Photograph in Staff Office and report in Archive.":i==6?"Attendance register in Lecture 01.":"Candle sleeve in the Classroom 03 bag.",0,row*104+33,740,63,small);row++;
+                }
+                if(count==0)Text("Ask someone for help to record their request here. Collecting supplies is free; completing a request costs one action.",0,0,735,105,body);
+                GUI.EndScrollView();
             }
             else
             {
@@ -187,7 +211,8 @@ namespace NoCauseForAlarm
             s.fov=Slider("FIELD OF VIEW",s.fov,60,100,680,214);s.effects=Slider("ANALOG / GRAIN / FLICKER",s.effects,0,1,680,284);s.shake=Slider("CAMERA MOVEMENT",s.shake,0,1,680,354);
             if(Button("SUBTITLES   "+(s.subtitles?"ON":"OFF"),680,430,520))s.subtitles=!s.subtitles;
             if(Button("GRAPHICS   "+(s.quality==0?"LOW":s.quality==1?"MEDIUM":"HIGH"),680,494,520))s.quality=(s.quality+1)%3;
-            Text("Critical evidence is always written in the notebook.\nSet analog and camera movement to zero for reduced visual motion.",60,579,1100,55,small);
+            if(Button("DISPLAY   "+(s.displayMode==0?"FULLSCREEN":s.displayMode==1?"BORDERLESS WINDOWED":"WINDOWED"),680,558,520))s.displayMode=(s.displayMode+1)%3;
+            Text("Critical clues stay in the notebook. Zero analog/camera movement reduces motion.\nDisplay changes take effect when you apply.",60,604,1100,44,small);
             if(Button("APPLY AND RETURN",900,650,320)){s.Save();G.Mode=G.ReturnMode;}
             AudioListener.volume=s.master;
         }
@@ -239,7 +264,7 @@ namespace NoCauseForAlarm
         void Credits()
         {
             Panel("A GAME ABOUT CERTAINTY","NO CAUSE FOR ALARM");
-            Text("Created for Kaveesh Ramsarran\nCity People models and animations: Denys Almaral (free Unity Store pack)\nVintage Living Room architecture: ZNS3D (free Unity Store pack)\nWRAD first-person hands: wriks (CC0)\nClassrooms: Styloo / Furniture: Kenney (CC0)\nConcrete footsteps: supplied by project owner, free-use confirmation\nOriginal ambience and local system-voice PA\nBuilt with Unity 6 / URP — full sources: ASSET_CREDITS.txt\n\nAll characters, institutions and events are fictional.",60,205,1130,388,body);
+            Text("Created for Kaveesh Ramsarran\nCity People models and animations: Denys Almaral (free Unity Store pack)\nVintage Living Room architecture: ZNS3D (free Unity Store pack)\nSchool assets: A.R.S|T. (free Unity Store pack)\nVintage Lighter: Slinc / Poly Haven (CC0)\nAdditional fixtures: Styloo / Kenney (CC0)\nConcrete footsteps: supplied by project owner, free-use confirmation\nOriginal ambience and local system-voice PA\nBuilt with Unity 6 / URP — full sources: ASSET_CREDITS.txt\n\nAll characters, institutions and events are fictional.",60,205,1130,388,body);
             Text("THERE IS NO CAUSE FOR ALARM.",60,593,1100,40,small);
             if(Button("RETURN TO MENU",900,650,320))G.MainMenu();
         }

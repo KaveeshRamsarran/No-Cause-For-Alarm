@@ -30,15 +30,14 @@ namespace NoCauseForAlarm
             var g=GameDirector.I;if(lit){g.Toast("The calibration mark reads: 30 SECONDS. Observe the flame.");return;}
             if(g.State.hour>=18){g.Toast("Transport is waiting. Finish the manifest at the east exit.");return;}
             lit=true;elapsed=0;heard=discovered=released=false;g.Spend("Lit a calibration candle in "+g.Campus.Location(transform.position)+".");
-            flame=Geometry.Shape(PrimitiveType.Sphere,"Candle flame",transform.position+Vector3.up*.18f,new Vector3(.065f,.17f,.065f),Geometry.Mat("Candle emission",new Color(1,.48f,.08f),5),null,false);
-            glow=flame.AddComponent<Light>();glow.color=new Color(1,.58f,.24f);glow.intensity=1.8f;glow.range=4;
+            flame=FlameVfx.Create("Candle flame",null,transform.position+Vector3.up*.155f,.068f,.17f,1.35f,4);
+            glow=flame.GetComponent<FlameVfx>().glow;
             g.Audio.OneShot("lighter",transform.position,.8f);g.Toast("30-second calibration candle lit.");
         }
         void Update()
         {
             if(!lit||GameDirector.I.Mode!=ScreenMode.Play)return;
             elapsed+=Time.deltaTime;var g=GameDirector.I;
-            glow.intensity=1.4f+Mathf.Sin(Time.time*21)*.2f;
             bool endless=haunted&&!g.State.ceilingSealed;
             if(elapsed>=30&&!endless){lit=false;Destroy(flame);g.Audio.OneShot("extinguish",transform.position,.5f);return;}
             if(endless&&elapsed>37&&!heard){heard=true;g.Audio.OneShot("scratch",transform.position+Vector3.up*2.5f,1);g.Subtitle("[A slow scrape travels across the ceiling.]",8);}

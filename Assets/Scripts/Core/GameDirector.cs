@@ -24,7 +24,7 @@ namespace NoCauseForAlarm
         };
         void Awake()
         {
-            I=this;Settings=Preferences.Load();Settings.Apply();State=GameState.New(1979);
+            I=this;Settings=Preferences.Load();Settings.Apply(!Environment.GetCommandLineArgs().Contains("-screen-fullscreen"));State=GameState.New(1979);
             Campus=new GameObject("East Wing / Campus").AddComponent<Campus>();Campus.Build();
             Player=new GameObject("Student").AddComponent<FirstPerson>();Player.Build();Player.Teleport(new Vector3(0,.1f,-4),0);
             Audio=gameObject.AddComponent<Soundscape>();UI=gameObject.AddComponent<GameUI>();
@@ -50,7 +50,7 @@ namespace NoCauseForAlarm
             ClearTransient();State=GameState.New(unchecked((int)DateTime.UtcNow.Ticks));ResetActors();
             foreach(var door in FindObjectsByType<Door>(FindObjectsSortMode.None))door.open=door.room!="ARCHIVE"&&door.room!="STAFF OFFICE";
             Campus.actors[0].transform.position=new Vector3(-8,0,-3.3f);Campus.actors[0].transform.rotation=Quaternion.identity;
-            for(int i=1;i<10;i++){Campus.actors[i].transform.position=new Vector3(-10+((i-1)%3)*2,0,-1+((i-1)/3)*2);Campus.actors[i].transform.rotation=Quaternion.Euler(0,180,0);}
+            for(int i=1;i<10;i++){Campus.actors[i].transform.position=i==9?new Vector3(-6,0,4.2f):new Vector3(i<=4?-11.8f:-4.2f,0,-2+((i-1)%4)*1.7f);Campus.actors[i].transform.rotation=Quaternion.Euler(0,180,0);}
             Player.Teleport(new Vector3(-8,.05f,3.6f),180);introStep=0;Mode=ScreenMode.Intro;Audio.Voice("intro0");
         }
         public void IntroNext()
@@ -74,7 +74,7 @@ namespace NoCauseForAlarm
         }
         void ResetActors()
         {
-            for(int i=0;i<Campus.actors.Count;i++){var a=Campus.actors[i];a.ResetBody();a.transform.position=a.room.center+new Vector3(i==7?2:0,0,i==9?3.8f:-3.4f);}
+            for(int i=0;i<Campus.actors.Count;i++){var a=Campus.actors[i];a.ResetBody();a.transform.position=Campus.HomePosition(i);}
         }
         void ClearTransient()
         {
@@ -129,6 +129,11 @@ namespace NoCauseForAlarm
             {Toast("The investigation period has ended. Review your manifest at the east exit.");return;}
             switch(item.kind)
             {
+                case "supply":
+                    if(State.collected.Contains(item.id)){Toast("You already picked that up.");break;}
+                    State.collected.Add(item.id);State.inventory.Add(item.id);
+                    State.journal.Add("Picked up "+HelpRequests.Name(item.id)+" in "+Campus.Location(item.transform.position)+".");
+                    Toast("Collected: "+HelpRequests.Name(item.id)+" / TAB: supplies and requests");Audio.OneShot("paper",item.transform.position,.5f);Save();break;
                 case "door":item.door.Toggle();break;
                 case "map":Mode=ScreenMode.Map;break;
                 case "candle":item.GetComponent<TestCandle>().Ignite();break;
@@ -153,7 +158,7 @@ namespace NoCauseForAlarm
                 case "power":
                     if(State.power){Toast("The supply is stable.");break;}
                     State.power=true;State.repaired=true;
-                    int repairs=State.HumanHelper(3)||State.HumanHelper(11)?1:2;
+                    int repairs=(State.HumanHelper(3)&&State.people[3].helped)||(State.HumanHelper(11)&&State.people[11].helped)?1:2;
                     for(int i=0;i<repairs;i++)Spend("Restored a fuse bank.");Toast("Power restored. Camera archive and electronic locks online.");break;
                 case "seal":
                     if(!State.ceilingDiscovered){Toast("Four ducts. You need to locate the source before closing one.");break;}
@@ -168,7 +173,7 @@ namespace NoCauseForAlarm
         public void Talk(NpcActor actor)
         {
             if(!State.Available(actor.id))return;Talking=actor;Player.Focus(actor);Mode=ScreenMode.Dialogue;
-            dialogue=State.hour>=17?"They say the bus is coming. You don't look relieved.":"Keep your voice down. These rooms carry sound.";
+            dialogue=Cast.Greeting(actor.id,State);
         }
         public void LeaveTalk(){if(Talking!=null){Player.Unfocus();Talking=null;}Mode=ScreenMode.Play;}
         public void Question(int choice)
@@ -200,16 +205,30 @@ namespace NoCauseForAlarm
         }
         void Help(int id)
         {
-            var p=Cast.All[id];var s=State.people[id];dialogue=p.help;
-            if(s.helped){dialogue+=" That is everything I can do right now.";return;}
-            if(id==4&&!State.Has("tissue")){dialogue="Bring the washbasin tissue from the bathroom first.";return;}
-            s.helped=true;
+            var p=Cast.All[id];var s=State.people[id];
+            if(s.helped){dialogue=HelpRequests.Thanks(id)+" Let me know if anything changes.";return;}
+            s.helpRequested=true;
+            if(!HelpRequests.Ready(id,State)){dialogue=HelpRequests.Request(id);Save();return;}
+            if(id==5&&!State.power){dialogue="You found it, good. Keep hold of it until the power's back. I can't read the drive on a dead terminal.";Save();return;}
+            string item=HelpRequests.Item(id);if(item!="")State.inventory.Remove(item);
+            s.helped=true;dialogue=HelpRequests.Thanks(id);
+            s.observations.Add("Help completed: "+dialogue);
+            if(id==0)State.lecturerConfessed=true;
             if(id==1)State.archiveUnlocked=true;
             if(id==2)AddClue("key");
+            if(id==3&&!s.infiltrator){State.power=true;State.repaired=true;}
+            if(id==3&&s.infiltrator)dialogue="I've fitted it. I think that'll hold. If it trips again, try the cabinet in Utility.";
             if(id==4){AddClue("analysis");State.health=Mathf.Min(100,State.health+30);}
-            if(id==3&&!State.power&&!s.infiltrator){State.power=true;State.repaired=true;dialogue="The supply is back. I don't know what tripped it from inside the conduit.";}
-            Spend("Asked "+p.name+" for assistance.");
+            if(id==5)AddClue("files");
+            if(id==6)AddClue("attendance");
+            if(id==7)AddClue("medical");
+            if(id==8)AddClue("recording");
+            if(id==9)State.health=Mathf.Min(100,State.health+25);
+            if(id==10)AddClue("protocol");
+            if(id==11)AddClue("maintenance");
+            Spend("Completed a request for "+p.name+".");
         }
+
         public void Accuse()
         {
             if(Talking==null)return;int id=Talking.id;bool trueCase=State.people[id].infiltrator;Vector3 pos=Talking.transform.position;

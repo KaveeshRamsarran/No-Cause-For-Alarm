@@ -69,13 +69,7 @@ namespace NoCauseForAlarm
         public static void RoomDetails(Room room,Transform parent)
         {
             var c=room.center;float s=room.side;
-            Fit("wall_with_one_window",parent,c+new Vector3(s*4.96f,1.65f,1.8f),new Vector3(2.1f,3.2f,.30f),s<0?90:270);
-            if(room.name=="STAFF OFFICE"||room.name=="SECURITY"||room.name=="ARCHIVE")
-            {
-                Fit("bookshelf",parent,c+new Vector3(3.4f,1.15f,-4.35f),new Vector3(1.5f,2.3f,.45f),180);
-                Fit("light_desk",parent,c+new Vector3(1.5f,1.09f,1.1f),new Vector3(.35f,.55f,.32f));
-                if(room.name=="STAFF OFFICE")Fit("sofa_small",parent,c+new Vector3(2.5f,.48f,3.7f),new Vector3(2.1f,.96f,.85f),180);
-            }
+            Fit("wall_with_one_window",parent,c+new Vector3(s*5.04f,1.65f,0),new Vector3(3.9f,3.2f,.30f),s<0?90:270);
             if(room.name=="LECTURE 01"||room.name=="STAFF OFFICE")Fit("curtain_1",parent,c+new Vector3(s*4.75f,1.8f,-1.5f),new Vector3(2.5f,2.6f,.1f),90);
         }
     }

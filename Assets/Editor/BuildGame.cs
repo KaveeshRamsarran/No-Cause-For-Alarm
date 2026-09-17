@@ -20,7 +20,7 @@ public static class BuildGame
     [MenuItem("NO CAUSE FOR ALARM/Configure and build Windows")]
     public static void Build()
     {
-        if(Resources.Load<GameObject>("LocalLicensed/People/Person0")==null||Resources.Load<GameObject>("LocalLicensed/wall_default")==null)
+        if(Resources.Load<GameObject>("LocalLicensed/People/Person0")==null||Resources.Load<GameObject>("LocalLicensed/wall_default")==null||Resources.Load<GameObject>("LocalLicensed/School/chair")==null||Resources.Load<GameObject>("Overhaul/VintageLighter")==null)
             throw new Exception("Restore the free graphics packs with Tools/setup_graphics.ps1 before building. See Documentation/GRAPHICS_OVERHAUL.md.");
         Configure();Validate();
         Directory.CreateDirectory("Builds/Windows");

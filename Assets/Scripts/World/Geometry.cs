@@ -55,6 +55,7 @@ namespace NoCauseForAlarm
         }
         public static GameObject Prop(string resource, Vector3 pos, float width, float yaw=0, Transform parent=null)
         {
+            var school=SchoolFurniture.Create(resource,pos,width,yaw,parent);if(school!=null)return school;
             var model=Resources.Load<GameObject>("Props/"+resource);
             if(model==null)return Box(resource,pos+Vector3.up*.4f,new Vector3(width,.8f,width*.6f),wood,parent);
             var root=new GameObject(resource);root.transform.SetParent(parent,false);root.transform.localPosition=pos;

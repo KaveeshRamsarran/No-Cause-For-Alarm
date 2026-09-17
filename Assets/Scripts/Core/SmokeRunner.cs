@@ -38,10 +38,23 @@ namespace NoCauseForAlarm
             var archive=FindObjectsByType<Door>(FindObjectsSortMode.None).First(d=>d.room=="ARCHIVE");
             Check(archive.Locked,"archive starts access-locked");
             var room=g.Campus.FindRoom("CLASSROOM 03");g.Player.Teleport(new Vector3(0,.1f,20),0);yield return new WaitForSeconds(.5f);yield return Capture("04-corridor");
+            int actionCount=g.State.actions;g.Talk(g.Campus.actors[2]);g.Question(4);g.LeaveTalk();
+            Check(!g.State.Has("key")&&g.State.actions==actionCount,"help request waits for physical supplies without spending an action");
+            foreach(var supply in HelpRequests.Supplies){g.Interact(FindObjectsByType<Interactable>(FindObjectsSortMode.None).First(i=>i.kind=="supply"&&i.id==supply.id));Check(g.State.inventory.Contains(supply.id),"collectible enters inventory: "+supply.id);}
+            Check(g.State.actions==actionCount,"collecting supplies costs no investigation actions");
+            g.Save();var carried=SaveStore.Load();Check(carried.inventory.Count==9&&carried.collected.Count==9,"inventory survives save and load");
             g.Talk(g.Campus.actors[2]);g.Question(0);g.Question(4);Check(g.State.Has("key"),"caretaker grants key");yield return new WaitForSeconds(.8f);yield return Capture("05-dialogue");g.LeaveTalk();
             g.Talk(g.Campus.actors[1]);g.Question(4);g.LeaveTalk();Check(g.State.archiveUnlocked,"security grants clearance");
             foreach(string clue in new[]{"photo","report","tissue","register","medical","maintenance"})g.AddClue(clue);
             g.Talk(g.Campus.actors[4]);g.Question(4);g.LeaveTalk();Check(g.State.Has("analysis"),"sample analysis unlocks evidence");
+            Check(!g.State.inventory.Contains("keyledger")&&!g.State.inventory.Contains("batteries")&&!g.State.inventory.Contains("samplekit"),"delivered supplies are consumed");
+            foreach(int helper in new[]{3,5,6,7,8,9,10,11})
+            {
+                if(helper==10)g.AddClue("bag");
+                g.Mode=ScreenMode.Play;g.Talk(g.Campus.actors[helper]);g.Question(4);g.LeaveTalk();Check(g.State.people[helper].helped,"completed help delivery for "+Cast.All[helper].name);
+            }
+            int clock=g.State.hour*4-g.State.actions;g.Talk(g.Campus.actors[2]);g.Question(4);g.LeaveTalk();Check(g.State.hour*4-g.State.actions==clock,"repeating a completed request grants no extra action cost or reward");
+            Check(g.State.inventory.Count==0,"all nine delivered supplies leave inventory");
             g.ShowNotebook();yield return Capture("06-notebook");g.Mode=ScreenMode.Play;
             g.Talk(g.Campus.actors[0]);g.Question(6);g.LeaveTalk();Check(g.State.lecturerConfessed,"document-gated lecturer confession");
             g.State.hour=13;g.State.actions=4;g.Mode=ScreenMode.Play;g.Player.Teleport(room.center+new Vector3(-3.8f,.1f,1.8f),0);g.Player.pitch=24;
@@ -62,8 +75,8 @@ namespace NoCauseForAlarm
             for(int i=0;i<7;i++)g.IntroNext();
             Action<int,int> ask=(id,choice)=>{g.Mode=ScreenMode.Play;g.Talk(g.Campus.actors[id]);g.Question(choice);g.LeaveTalk();};
             Action<string,string> use=(kind,id)=>{g.Mode=ScreenMode.Play;g.Interact(FindObjectsByType<Interactable>(FindObjectsSortMode.None).First(t=>t.kind==kind&&(id==""||t.id==id)));g.Mode=ScreenMode.Play;};
-            ask(2,4);ask(1,4);use("evidence","photo");use("evidence","report");ask(0,6);
-            use("evidence","register");use("cctv","");use("computer","");use("evidence","tissue");ask(4,4);
+            use("supply","keyledger");ask(2,4);use("supply","batteries");ask(1,4);use("evidence","photo");use("evidence","report");ask(0,6);
+            use("evidence","register");use("cctv","");use("computer","");use("evidence","tissue");use("supply","samplekit");ask(4,4);
             ask(7,3);use("evidence","maintenance");
             control=FindObjectsByType<TestCandle>(FindObjectsSortMode.None).First(c=>!c.haunted);control.Ignite();
             candle=FindObjectsByType<TestCandle>(FindObjectsSortMode.None).First(c=>c.haunted);candle.Ignite();

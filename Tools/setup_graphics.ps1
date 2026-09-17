@@ -8,11 +8,11 @@ Push-Location $projectPath
 try {
     python Tools/import_cached_assets.py
     if ($LASTEXITCODE -ne 0) { throw 'Free Unity Store packs are missing from the local cache.' }
-    if (-not (Test-Path -LiteralPath 'SourceAssets/Overhaul/hands/arms.fbx')) {
-        python Tools/download_free_pack.py https://wriks.itch.io/wrad-arms hands
-        if ($LASTEXITCODE -ne 0) { throw 'Could not download the free WRAD pack.' }
+    if (-not (Test-Path -LiteralPath 'SourceAssets/Overhaul/lighter/vintage_lighter.blend')) {
+        python Tools/download_lighter.py
+        if ($LASTEXITCODE -ne 0) { throw 'Could not download the CC0 Poly Haven lighter.' }
     }
-    $conversion = Start-Process $Blender -ArgumentList '-b --python Tools/prepare_overhaul_models.py' -WindowStyle Hidden -Wait -PassThru
+    $conversion = Start-Process $Blender -ArgumentList '-b --python Tools/prepare_lighter.py' -WindowStyle Hidden -Wait -PassThru
     if ($conversion.ExitCode -ne 0) { throw 'Blender asset preparation failed.' }
     $arguments = @('-batchmode','-quit','-accept-apiupdate','-projectPath',('"'+$projectPath+'"'),'-executeMethod','OverhaulAssets.Prepare','-logFile','Logs/OverhaulPrepare.log')
     $prepare = Start-Process $Unity -ArgumentList $arguments -WindowStyle Hidden -Wait -PassThru
