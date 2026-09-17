@@ -17,3 +17,11 @@ SourceAssets/Furniture/
 SourceAssets/Classroom/
 .DS_Store
 *.blend1
+SourceAssets/Overhaul/
+Assets/LocalLicensed/
+Assets/LocalLicensed.meta
+Assets/Resources/LocalLicensed/
+Assets/Resources/LocalLicensed.meta
+Assets/Resources/Audio/UserFootsteps/
+Assets/Resources/Audio/UserFootsteps.meta
+Distribution/NO-CAUSE-FOR-ALARM-Windows/

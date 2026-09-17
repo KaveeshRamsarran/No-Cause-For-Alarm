@@ -1,4 +1,4 @@
-NO CAUSE FOR ALARM
+NO CAUSE FOR ALARM - 1.1.0
 
 First-person psychological horror in a locked college wing.
 Talk, investigate, test and decide who boards the 18:00 evacuation bus.
@@ -23,14 +23,17 @@ analog effects and camera movement. Reduce the last two to zero for less motion.
 
 BUILD
 Unity 6000.4.7f1 with Windows Build Support; URP 17.4.0.
+Restore the free graphics packs using Documentation/GRAPHICS_OVERHAUL.md first.
 Open Assets/Scenes/EastWing.unity. The bootstrap builds the campus at runtime.
 Menu: NO CAUSE FOR ALARM > Configure and build Windows.
 Command: powershell -ExecutionPolicy Bypass -File Tools/build.ps1
 
 ASSETS AND CREDITS
 Styloo / School Classrooms Asset Pack, Kenney / Furniture Kit (CC0).
-Original code, story, procedural art and synthetic sound.
-Original AI-generated face atlas, mapped onto an original Blender head mesh.
+City People models/animations (Denys Almaral), Vintage Living Room (ZNS3D):
+free Unity Store packs, Standard Unity Asset Store EULA.
+WRAD ARMS (wriks): CC0. Concrete footsteps: supplied by owner, free use confirmed.
+Original code, story, lighter, effects and ambient sound.
 Full provenance: ASSET_CREDITS.txt. Development notes: DEVELOPMENT_LOG.md.
 
 Save data: Windows LocalLow/Bellwether Games/NO CAUSE FOR ALARM.

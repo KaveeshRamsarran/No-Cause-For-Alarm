@@ -20,6 +20,8 @@ public static class BuildGame
     [MenuItem("NO CAUSE FOR ALARM/Configure and build Windows")]
     public static void Build()
     {
+        if(Resources.Load<GameObject>("LocalLicensed/People/Person0")==null||Resources.Load<GameObject>("LocalLicensed/wall_default")==null)
+            throw new Exception("Restore the free graphics packs with Tools/setup_graphics.ps1 before building. See Documentation/GRAPHICS_OVERHAUL.md.");
         Configure();Validate();
         Directory.CreateDirectory("Builds/Windows");
         var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions {scenes=new[]{"Assets/Scenes/EastWing.unity"},locationPathName="Builds/Windows/NO CAUSE FOR ALARM.exe",target=BuildTarget.StandaloneWindows64,options=BuildOptions.None});
@@ -29,7 +31,7 @@ public static class BuildGame
     [MenuItem("NO CAUSE FOR ALARM/Configure project")]
     public static void Configure()
     {
-        PlayerSettings.companyName="Bellwether Games";PlayerSettings.productName="NO CAUSE FOR ALARM";PlayerSettings.bundleVersion="1.0.0";
+        PlayerSettings.companyName="Bellwether Games";PlayerSettings.productName="NO CAUSE FOR ALARM";PlayerSettings.bundleVersion="1.1.0";
         PlayerSettings.defaultScreenWidth=1280;PlayerSettings.defaultScreenHeight=720;PlayerSettings.fullScreenMode=FullScreenMode.FullScreenWindow;
         PlayerSettings.runInBackground=true;PlayerSettings.colorSpace=ColorSpace.Linear;
         PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone,ScriptingImplementation.Mono2x);

@@ -1,9 +1,9 @@
 {
   "title": "NO CAUSE FOR ALARM",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "platform": "Windows x64",
   "unity": "6000.4.7f1",
   "file": "NO-CAUSE-FOR-ALARM-Windows.zip",
-  "bytes": 37881698,
-  "sha256": "496556bc57df954bfcc8cea747afb01ab06caf099ec1ca170a3c92e096dc0fe9"
+  "bytes": 47443174,
+  "sha256": "9ae587059837a9b1d29238f68a0ae69cc2a74fdd8734be256519bec460b358af"
 }

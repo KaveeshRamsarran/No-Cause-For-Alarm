@@ -74,7 +74,7 @@ namespace NoCauseForAlarm
     public static class SaveStore
     {
         public static string Path => System.IO.Path.Combine(Application.persistentDataPath,
-            Environment.GetCommandLineArgs().Contains("-ncfa-smoke") ? "smoke-save.json" : "cohort-save.json");
+            Environment.GetCommandLineArgs().Contains("-ncfa-art") ? "graphics-save.json" : Environment.GetCommandLineArgs().Contains("-ncfa-smoke") ? "smoke-save.json" : "cohort-save.json");
         public static void Save(GameState state)
         {
             var temp = Path + ".tmp";

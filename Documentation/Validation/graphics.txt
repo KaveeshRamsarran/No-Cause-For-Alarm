@@ -1,0 +1,49 @@
+PASS all twelve actors have valid imported humanoid avatars
+PASS all people use weighted character meshes
+PASS priest model excluded from game resources
+PASS supplied MP3 provides distinct footstep contacts
+PASS modular architecture is instantiated
+PASS imported WRAD hand replaces capsule hand
+PASS authored idle animation moves Dr. Elias Venn
+PASS authored idle animation moves Ruth Calder
+PASS authored idle animation moves Ada Moss
+PASS authored idle animation moves Iris Chen
+PASS authored idle animation moves Samira Bell
+PASS authored idle animation moves Noah Pike
+PASS authored idle animation moves Mara Vale
+PASS authored idle animation moves Ben Harlow
+PASS authored idle animation moves June Park
+PASS authored idle animation moves Len Ortiz
+PASS authored idle animation moves Dr. Mara Ellis
+PASS authored idle animation moves Sol Mercer
+PASS classroom podium has appropriate height
+PASS emergency sconce clears wall at (2.64, 2.65, 0.00)
+PASS emergency sconce clears wall at (2.64, 2.65, 12.00)
+PASS emergency sconce clears wall at (2.64, 2.65, 24.00)
+PASS emergency sconce clears wall at (2.64, 2.65, 36.00)
+PASS emergency sconce clears wall at (2.64, 2.65, 48.00)
+PASS emergency sconce clears wall at (-13.04, 2.70, 3.50)
+PASS emergency sconce clears wall at (13.04, 2.70, 3.50)
+PASS emergency sconce clears wall at (-13.04, 2.70, 13.50)
+PASS emergency sconce clears wall at (13.04, 2.70, 13.50)
+PASS emergency sconce clears wall at (-13.04, 2.70, 23.50)
+PASS emergency sconce clears wall at (13.04, 2.70, 23.50)
+PASS emergency sconce clears wall at (-13.04, 2.70, 33.50)
+PASS emergency sconce clears wall at (13.04, 2.70, 33.50)
+PASS emergency sconce clears wall at (-13.04, 2.70, 43.50)
+PASS emergency sconce clears wall at (13.04, 2.70, 43.50)
+PASS emergency sconce clears wall at (-13.04, 2.70, 53.50)
+PASS emergency sconce clears wall at (13.04, 2.70, 53.50)
+PASS natural resting arm pose: Dr. Elias Venn
+PASS natural resting arm pose: Ruth Calder
+PASS natural resting arm pose: Ada Moss
+PASS natural resting arm pose: Iris Chen
+PASS natural resting arm pose: Samira Bell
+PASS natural resting arm pose: Noah Pike
+PASS natural resting arm pose: Mara Vale
+PASS natural resting arm pose: Ben Harlow
+PASS natural resting arm pose: June Park
+PASS natural resting arm pose: Len Ortiz
+PASS natural resting arm pose: Dr. Mara Ellis
+PASS natural resting arm pose: Sol Mercer
+ERRORS 0

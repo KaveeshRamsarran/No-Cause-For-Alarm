@@ -51,7 +51,7 @@ namespace NoCauseForAlarm
                 Fill(new Rect(0,0,1280,2),new Color(.65f,.74f,.61f,.12f));
             }
             if(Time.unscaledTime<G.toastUntil&&(mode==ScreenMode.Play||mode==ScreenMode.Dialogue||mode==ScreenMode.Inspect))
-            {Fill(new Rect(260,22,760,44),new Color(.035f,.048f,.047f,.93f));Text(G.toast,278,32,724,30,small);}
+            {float y=mode==ScreenMode.Dialogue?665:22;Fill(new Rect(260,y,550,40),new Color(.035f,.048f,.047f,.93f));Text(G.toast,278,y+8,514,30,small);}
             if(Time.unscaledTime<G.subtitleUntil&&G.Settings.subtitles&&mode==ScreenMode.Play)
             {Fill(new Rect(220,554,840,65),new Color(.025f,.032f,.029f,.88f));Text(G.subtitle,245,566,790,49,label);}
         }
@@ -239,7 +239,7 @@ namespace NoCauseForAlarm
         void Credits()
         {
             Panel("A GAME ABOUT CERTAINTY","NO CAUSE FOR ALARM");
-            Text("Created for Kaveesh Ramsarran\nDesign, writing, programming and original procedural art: OpenAI Codex\n\nSchool Classrooms Asset Pack: Styloo (CC0)\nFurniture Kit: Kenney (CC0)\nOriginal synthesized sound design and local system-voice PA\nBuilt with Unity 6 / Universal Render Pipeline\nFull licenses and sources: ASSET_CREDITS.txt\n\nAll characters, institutions and events are fictional.",60,212,1130,352,body);
+            Text("Created for Kaveesh Ramsarran\nCity People models and animations: Denys Almaral (free Unity Store pack)\nVintage Living Room architecture: ZNS3D (free Unity Store pack)\nWRAD first-person hands: wriks (CC0)\nClassrooms: Styloo / Furniture: Kenney (CC0)\nConcrete footsteps: supplied by project owner, free-use confirmation\nOriginal ambience and local system-voice PA\nBuilt with Unity 6 / URP — full sources: ASSET_CREDITS.txt\n\nAll characters, institutions and events are fictional.",60,205,1130,388,body);
             Text("THERE IS NO CAUSE FOR ALARM.",60,593,1100,40,small);
             if(Button("RETURN TO MENU",900,650,320))G.MainMenu();
         }

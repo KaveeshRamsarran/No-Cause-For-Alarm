@@ -2,7 +2,9 @@
 
 A first-person psychological horror game set during a college lockdown. Talk to twelve people, compare their accounts, ration your lighter, and decide who boards the 18:00 evacuation bus. Fire is information, not a reliable verdict.
 
-![Original character conversation in the east wing](Documentation/Screenshots/conversation.png)
+![City People character conversation in the east wing](Documentation/Screenshots/conversation.png)
+
+Version **1.1.0** adds animated City People characters, imported modular building surfaces and doors, a textured first-person hand, and the supplied concrete footsteps. The classroom podium is smaller and the emergency sconces sit clear of the walls.
 
 ## Play on Windows
 
@@ -28,6 +30,8 @@ Settings include master, drone and SFX/voice levels, sensitivity, brightness, FO
 
 Use Unity **6000.4.7f1** with Windows Build Support. Open this repository in Unity Hub. The project uses **URP 17.4.0**; let Package Manager finish resolving packages on first import.
 
+Restore the two free Unity Store packs and prepare their materials/animations using [the graphics setup instructions](Documentation/GRAPHICS_OVERHAUL.md#restore-the-graphics-on-another-workstation). Their source files are excluded from the public repository under the Asset Store license; the downloadable game already includes the integrated art.
+
 Open `Assets/Scenes/EastWing.unity`, then enter Play mode. The campus is assembled by its bootstrap component. To rebuild, choose **NO CAUSE FOR ALARM → Configure and build Windows**, or run:
 
 ```powershell
@@ -44,10 +48,10 @@ The build runs 7,010 story assertions across 1,000 seeds before packaging. The o
 powershell -ExecutionPolicy Bypass -File Tools/smoke-test.ps1
 ```
 
-See [QA](Documentation/QA.md), [design and ending rules](Documentation/DESIGN.md), and [development log](DEVELOPMENT_LOG.md). Human playtesting is still needed to establish whether first-playthrough pacing meets the brief's 45–90 minute target. The implementation uses procedural character animation and written conversations, with voiced PA announcements.
+See [QA](Documentation/QA.md), [design and ending rules](Documentation/DESIGN.md), and [development log](DEVELOPMENT_LOG.md). Human playtesting is still needed to establish whether first-playthrough pacing meets the brief's 45–90 minute target. The cast uses City People skinned models and authored idle, walk, jog and gesture clips. Conversations are written, with voiced PA announcements.
 
 ## Credits
 
-School Classrooms Asset Pack by **Styloo**, Furniture Kit by **Kenney** — both CC0. Original character mesh, environmental assembly, sound synthesis, story and code are included. Full sources and licensing details are in [ASSET_CREDITS.txt](ASSET_CREDITS.txt).
+Free packs used: **City People FREE Samples** and **Vintage Living Room** under the Unity Asset Store EULA; **WRAD ARMS**, **Styloo School Classrooms**, and **Kenney Furniture** under CC0. Footsteps use the supplied recording with the owner's confirmation of free use. Sources and terms are recorded in [ASSET_CREDITS.txt](ASSET_CREDITS.txt).
 
-Generated `Library`, `Temp`, logs, test screenshots and unpacked builds are excluded from source control. Imported assets, their `.meta` files, package lock, project settings, build scripts and original Blender source are tracked.
+Generated `Library`, `Temp`, logs, test screenshots and unpacked builds are excluded from source control. Redistributable assets, their `.meta` files, package lock, project settings, build/setup scripts and the adapted CC0 hand's Blender source are tracked. Asset Store art and owner-supplied audio sources remain local.

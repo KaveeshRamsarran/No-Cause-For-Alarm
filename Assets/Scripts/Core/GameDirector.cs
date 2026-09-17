@@ -29,6 +29,7 @@ namespace NoCauseForAlarm
             Player=new GameObject("Student").AddComponent<FirstPerson>();Player.Build();Player.Teleport(new Vector3(0,.1f,-4),0);
             Audio=gameObject.AddComponent<Soundscape>();UI=gameObject.AddComponent<GameUI>();
             if(Environment.GetCommandLineArgs().Contains("-ncfa-smoke"))gameObject.AddComponent<SmokeRunner>();
+            if(Environment.GetCommandLineArgs().Contains("-ncfa-art"))gameObject.AddComponent<GraphicsReview>();
         }
         void Update()
         {

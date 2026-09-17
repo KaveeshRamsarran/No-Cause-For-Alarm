@@ -7,20 +7,22 @@ namespace NoCauseForAlarm
     {
         public Camera view;public CharacterController body;public float pitch,stamina=100;public bool lighterRaised,flameOn,crouched;
         public Interactable target; public NpcActor npcTarget;public Transform hand;public GameObject flame;public Light flameLight;
-        float velocityY,stepTimer,bob;Light portraitLight;public Vector3 savedPosition;public Quaternion savedRotation;
+        float velocityY,stepTimer,bob,igniteKick;Transform grip,lid;Light portraitLight;public Vector3 savedPosition;public Quaternion savedRotation;
         public void Build()
         {
             body=gameObject.AddComponent<CharacterController>();body.height=1.8f;body.radius=.27f;body.center=new Vector3(0,.9f,0);body.stepOffset=.25f;
             var cam=new GameObject("Player camera");cam.tag="MainCamera";cam.transform.SetParent(transform,false);cam.transform.localPosition=Vector3.up*1.62f;
             view=cam.AddComponent<Camera>();view.nearClipPlane=.045f;view.farClipPlane=90;view.fieldOfView=75;view.backgroundColor=RenderSettings.fogColor;view.clearFlags=CameraClearFlags.SolidColor;
             view.GetUniversalAdditionalCameraData().renderPostProcessing=true;cam.AddComponent<AudioListener>();
-            portraitLight=cam.AddComponent<Light>();portraitLight.type=LightType.Point;portraitLight.range=3;portraitLight.intensity=1.35f;portraitLight.color=new Color(.68f,.88f,.52f);portraitLight.enabled=false;
+            portraitLight=cam.AddComponent<Light>();portraitLight.type=LightType.Point;portraitLight.range=3;portraitLight.intensity=.4f;portraitLight.color=new Color(.83f,.88f,.68f);portraitLight.enabled=false;
             hand=new GameObject("Lighter hand").transform;hand.SetParent(cam.transform,false);hand.localPosition=new Vector3(.25f,-.36f,.46f);
-            var skin=Geometry.Mat("Player skin",new Color(.42f,.29f,.20f));
-            Geometry.Shape(PrimitiveType.Capsule,"Sleeve",new Vector3(.05f,-.2f,-.08f),new Vector3(.17f,.27f,.18f),Geometry.trim,hand);
-            Geometry.Shape(PrimitiveType.Capsule,"Hand",new Vector3(0,-.05f,0),new Vector3(.11f,.10f,.10f),skin,hand);
+            var handAsset=Resources.Load<GameObject>("Overhaul/LighterGrip");
+            if(handAsset==null)throw new System.InvalidOperationException("Missing CC0 WRAD hand. Prepare graphics assets.");
+            var gripPivot=new GameObject("Animated WRAD wrist").transform;gripPivot.SetParent(hand,false);gripPivot.localPosition=new Vector3(.015f,-.02f,-.015f);gripPivot.localRotation=Quaternion.Euler(0,180,-8);
+            grip=Instantiate(handAsset,gripPivot).transform;grip.localPosition=Vector3.zero;
             Geometry.Box("Lighter body",Vector3.zero,new Vector3(.066f,.115f,.028f),Geometry.metal,hand,false);
             Geometry.Box("Lighter hood",new Vector3(0,.069f,0),new Vector3(.065f,.029f,.03f),Geometry.dark,hand,false);
+            lid=Geometry.Box("Hinged lighter lid",new Vector3(-.038f,.066f,0),new Vector3(.06f,.035f,.033f),Geometry.metal,hand,false).transform;
             flame=Geometry.Shape(PrimitiveType.Sphere,"Lighter flame",new Vector3(0,.12f,0),new Vector3(.018f,.068f,.018f),Geometry.Mat("Lighter flame",new Color(1,.55f,.1f),6),hand);
             flameLight=flame.AddComponent<Light>();flameLight.range=5;flameLight.intensity=2;flameLight.color=new Color(1,.62f,.3f);flameLight.shadows=LightShadows.Soft;flame.SetActive(false);
         }
@@ -37,7 +39,7 @@ namespace NoCauseForAlarm
         {
             var g=GameDirector.I;if(g.State==null)return;
             if(g.State.fuel<=0){g.Toast("The lighter is empty. There is a refill tin in Stores.");return;}
-            lighterRaised=true;flameOn=!flameOn;flame.SetActive(flameOn);g.Audio.OneShot(flameOn?"lighter":"extinguish",transform.position,.6f);
+            igniteKick=1;lighterRaised=true;flameOn=!flameOn;flame.SetActive(flameOn);g.Audio.OneShot(flameOn?"lighter":"extinguish",transform.position,.6f);
         }
         void Update()
         {
@@ -47,9 +49,15 @@ namespace NoCauseForAlarm
             if(g.State!=null&&flameOn&&(g.Mode==ScreenMode.Play||g.Mode==ScreenMode.Dialogue))
             {
                 g.State.fuel=Mathf.Max(0,g.State.fuel-Time.deltaTime*.48f);if(g.State.fuel<=0){flameOn=false;flame.SetActive(false);}
-                flameLight.intensity=(1.7f+Mathf.Sin(Time.time*29)*.25f)*g.Settings.brightness;
+                flameLight.intensity=(.32f+Mathf.Sin(Time.time*29)*.04f)*g.Settings.brightness;
             }
-            hand.localPosition=Vector3.Lerp(hand.localPosition,new Vector3(.25f,lighterRaised?-.27f:-.62f,.46f),Time.unscaledDeltaTime*9);
+            igniteKick=Mathf.MoveTowards(igniteKick,0,Time.unscaledDeltaTime*3.5f);
+            float sway=Mathf.Sin(bob)*.005f*g.Settings.shake;
+            hand.localPosition=Vector3.Lerp(hand.localPosition,new Vector3(.25f+sway,(lighterRaised?-.18f:-.83f)+sway,.46f),Time.unscaledDeltaTime*9);
+            hand.localRotation=Quaternion.Slerp(hand.localRotation,Quaternion.Euler(igniteKick*-10,Mathf.Clamp(-Input.GetAxisRaw("Mouse X"),-3,3),igniteKick*5),Time.unscaledDeltaTime*10);
+            lid.localRotation=Quaternion.Slerp(lid.localRotation,Quaternion.Euler(0,0,flameOn?115:0),Time.unscaledDeltaTime*14);
+            hand.gameObject.SetActive(g.Mode==ScreenMode.Play||g.Mode==ScreenMode.Intro);
+
             if(g.Mode!=ScreenMode.Play){target=null;npcTarget=null;return;}
             Cursor.lockState=CursorLockMode.Locked;Cursor.visible=false;
             transform.Rotate(0,Input.GetAxisRaw("Mouse X")*g.Settings.sensitivity*1.6f,0);
@@ -63,7 +71,7 @@ namespace NoCauseForAlarm
             body.Move((dir*speed+Vector3.up*velocityY)*Time.deltaTime);
             bob+=Time.deltaTime*(sprint?12:8);float height=crouched?1.05f:1.62f;
             view.transform.localPosition=Vector3.Lerp(view.transform.localPosition,new Vector3(0,height+(moving?Mathf.Sin(bob)*.018f*g.Settings.shake:0),0),Time.deltaTime*10);
-            if(moving&&body.isGrounded){stepTimer-=Time.deltaTime;if(stepTimer<=0){stepTimer=sprint?.31f:.52f;g.Audio.OneShot("step",transform.position,crouched?.12f:.3f);}}
+            if(moving&&body.isGrounded){stepTimer-=Time.deltaTime;if(stepTimer<=0){stepTimer=sprint?.31f:.52f;g.Audio.Footstep(crouched?.16f:sprint?.55f:.38f,sprint);}}
             if(Input.GetKeyDown(KeyCode.F))ToggleFlame();
             if(Input.GetKeyDown(KeyCode.R)){lighterRaised=!lighterRaised;if(!lighterRaised){flameOn=false;flame.SetActive(false);}}
             target=null;npcTarget=null;

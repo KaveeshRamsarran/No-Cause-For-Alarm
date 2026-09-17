@@ -19,10 +19,10 @@ Original license: Assets/ThirdParty/Kenney/License.txt.
 Modifications: normalized scale, replacement muted materials and lighting.
 
 Original project assets
-Original character portrait mesh: generated in Blender by Tools/create_portrait.py; source SourceAssets/Portrait.blend.
-Original face atlas: generated using the built-in OpenAI image-generation tool for this project, with twelve original fictional identities. Assets/Resources/Characters/FaceAtlas.png. Prompt and integration notes: Documentation/ART_DIRECTION.md. No reference-game face was supplied or copied.
-Original campus architecture, character assemblies, deformations, animations, lighter, effects, textures and UI: project code.
-Original ambience, drone and sound effects: Tools/generate_audio.py. Deterministic synthesized PCM; no sampled recordings.
+Historical 1.0 character portrait mesh (superseded by City People): generated in Blender by Tools/create_portrait.py; source SourceAssets/Portrait.blend.
+Historical 1.0 face atlas (not used by the current cast): generated using the built-in OpenAI image-generation tool for this project, with twelve original fictional identities. Assets/Resources/Characters/FaceAtlas.png. Prompt and integration notes: Documentation/ART_DIRECTION.md. No reference-game face was supplied or copied.
+Campus layout and collision, character assembly and animation blending, creature deformation, lighter, effects and UI: project code. Current building surfaces and characters use the credited imported packs.
+Original ambience, drone and fallback sound effects: Tools/generate_audio.py. Deterministic synthesized PCM. Current footsteps use the separately credited owner-supplied recording.
 PA voice: original written dialogue rendered with the installed Windows System.Speech synthesizer. No actor recording or external voice clone.
 Story, dialogue, evidence and institution: original fictional content created for this project.
 
@@ -31,4 +31,31 @@ Unity 6.4.7f1 and Universal Render Pipeline 17.4.0: Unity Technologies; Unity li
 LegacyRuntime font: Unity built-in runtime font.
 
 No reference-game characters, models, music, logos or dialogue were copied.
-No paid or account-gated character/animation assets were imported. Original procedural animation is used instead of Mixamo.
+No paid assets were purchased. The following free Unity Store packs require an account and use the Standard Unity Asset Store EULA (https://unity.com/legal/as-terms). Raw pack files and derived prefabs/clips remain local and are excluded from public source control; they are incorporated into the compiled game.
+
+City People FREE Samples
+Creator: Denys Almaral
+Source: https://assetstore.unity.com/packages/3d/characters/city-people-free-samples-260446
+License: Standard Unity Asset Store EULA; free listing.
+Used: nine adult skinned models, palette variants for twelve cast assignments, native male/female idle, walk, jogging, alternate idle and self-check animations. Recolored for the game's lighting.
+
+VINTAGE LIVING ROOM 3D GAME PACK
+Creator: ZNS3D
+Source: https://assetstore.unity.com/packages/3d/environments/vintage-living-room-3d-game-pack-314464
+License: Standard Unity Asset Store EULA; free listing.
+Used: modular walls, floors, ceilings, windows, doors/frames, shelves, sofa, lamp and curtains. Converted HDRP materials to URP and normalized scale.
+
+WRAD ARMS
+Creator: wriks
+Source: https://wriks.itch.io/wrad-arms
+License: CC0, as stated on the creator's page.
+Used: textured right hand/forearm; extracted and posed in Blender for the lighter. Runtime wrist/raise animation and separate hinged lighter lid.
+License record: Assets/ThirdParty/WRAD/LICENSE.txt.
+Adapted source: SourceAssets/LighterGrip.blend.
+
+Walk On Concrete - Sound Effect for editing.mp3
+Supplied by the project owner, who confirmed free use on 2026-09-17.
+Used: ten trimmed concrete footfall samples, synchronized to player movement.
+Permission relies on the owner's confirmation; no independently verified CC0 claim is made. Source recording and derived audio files remain excluded from the public repository; the compiled game includes the samples.
+
+Restoration and provenance details: Documentation/GRAPHICS_OVERHAUL.md.

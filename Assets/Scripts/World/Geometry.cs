@@ -32,7 +32,7 @@ namespace NoCauseForAlarm
             return m;
         }
         public static GameObject Box(string name, Vector3 pos, Vector3 size, Material mat, Transform parent=null, bool solid=true)
-        { return Shape(PrimitiveType.Cube,name,pos,size,mat,parent,solid); }
+        { var box=Shape(PrimitiveType.Cube,name,pos,size,mat,parent,solid);CampusArt.DressBox(box,size,mat);return box; }
         public static GameObject Shape(PrimitiveType type,string name,Vector3 pos,Vector3 size,Material mat,Transform parent=null,bool solid=false)
         {
             var g=GameObject.CreatePrimitive(type);g.name=name;g.transform.SetParent(parent,false);g.transform.localPosition=pos;g.transform.localScale=size;
@@ -89,6 +89,21 @@ namespace NoCauseForAlarm
         }
         public static Light Lamp(Vector3 pos,bool emergency=false,Transform parent=null)
         {
+            if(emergency)
+            {
+                // Model the sconce in its own wall-facing frame. The old ceiling fixture
+                // extended along X and intersected the corridor partition.
+                float side=Mathf.Sign(pos.x);
+                if(Mathf.Abs(pos.x)>3){pos.x=side*13.04f;pos.z+=3.5f;}else pos.x=side*2.64f;
+                var mount=new GameObject("Emergency wall sconce").transform;mount.SetParent(parent,false);mount.localPosition=pos;
+                mount.localRotation=Quaternion.Euler(0,side>0?-90:90,0);
+                Box("Sconce backplate",Vector3.zero,new Vector3(.42f,.22f,.065f),metal,mount,false);
+                Box("Red diffuser",new Vector3(0,0,.055f),new Vector3(.34f,.135f,.065f),red,mount,false);
+                for(int i=-1;i<=1;i++)Box("Protective lens bar",new Vector3(i*.13f,0,.093f),new Vector3(.018f,.17f,.025f),metal,mount,false);
+                var source=new GameObject("Emergency light");source.transform.SetParent(mount,false);source.transform.localPosition=new Vector3(0,0,.24f);
+                var light=source.AddComponent<Light>();light.type=LightType.Point;light.range=6;light.intensity=.9f;light.color=new Color(1,.18f,.08f);light.shadows=LightShadows.None;
+                source.AddComponent<CampusLight>().emergency=true;return light;
+            }
             Box("Fixture",pos,new Vector3(1.4f,.12f,.28f),metal,parent,false);
             Box("Tube",pos-Vector3.up*.07f,new Vector3(1.25f,.045f,.20f),emergency?red:glow,parent,false);
             var g=new GameObject(emergency?"Emergency light":"Fluorescent light");g.transform.SetParent(parent,false);g.transform.localPosition=pos-Vector3.up*.2f;
