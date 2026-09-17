@@ -16,7 +16,7 @@ namespace NoCauseForAlarm
         public int version = 1, seed, hour = 10, actions = 4, mistakes;
         public float fuel = 100, health = 100;
         public bool power = true, repaired, ceilingDiscovered, ceilingSealed, archiveUnlocked, lecturerConfessed;
-        public bool ended;
+        public bool ended,manifestPrepared;
         public string ending = "";
         public PersonState[] people;
         public List<string> evidence = new List<string>();
@@ -63,7 +63,7 @@ namespace NoCauseForAlarm
             if (active >= 3) return "OVERRUN";
             if (evacuation.Any(i => i >= 0 && i < people.Length && Available(i) && people[i].infiltrator)) return "INFILTRATION";
             if (!ceilingSealed) return "THE BUILDING REMAINS";
-            if (mistakes >= 3 || people.Count(p => !p.infiltrator && (p.dead || p.detained)) >= 3) return "A CLEAN REGISTER";
+            if (mistakes >= 3 || Enumerable.Range(0,people.Length).Count(i => !people[i].infiltrator && (people[i].dead || people[i].detained || (Available(i)&&!evacuation.Contains(i)))) >= 3) return "A CLEAN REGISTER";
             return "THE LAST BUS";
         }
         public bool Valid()

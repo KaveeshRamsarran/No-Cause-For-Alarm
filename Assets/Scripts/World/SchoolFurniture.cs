@@ -6,7 +6,7 @@ namespace NoCauseForAlarm
     {
         public static readonly Dictionary<string,string> Models=new Dictionary<string,string>{
             {"schoolTable","table3"},{"desk","table3"},{"lectern","table3"},{"tableRound","table2"},
-            {"schoolChair","chair"},{"chair","chair"},{"chairDesk","chair"},
+            {"schoolChair","chair"},{"chair","chair"},{"chairDesk","chair"},{"teacherChair","chair"},
             {"kitchenCabinet","table1"},{"bathroomSink","table1"},{"bookcaseOpen","rack1"},
             {"locker","locker_1"},{"computerScreen","computer"},{"monitor","computer"},
             {"book","book"},{"extinguisher","fire"},{"displayCounter","showcase"}};

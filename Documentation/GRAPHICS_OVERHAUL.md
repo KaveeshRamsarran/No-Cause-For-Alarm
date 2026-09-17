@@ -1,4 +1,4 @@
-# Graphics and interaction update - 1.1
+# Graphics and interaction update - 1.2
 
 The twelve cast assignments use nine adult meshes from **City People FREE Samples**, with native male/female idle, walk, jog and gesture clips blended onto humanoid avatars. The ceiling creature is a distorted City People character. The priest and first-person hand have been removed from the game and build resources.
 
@@ -6,12 +6,16 @@ The player's lighter is **Vintage Lighter by Slinc / Poly Haven**. It has textur
 
 ## Furniture and placement
 
-**School assets by A.R.S|T.**, the exact requested pack, supplies desks, chairs, cafeteria tables and attached stools, sink counters, display counters, lockers, shelving, boards, books, computer props and extinguishers. Chair backrests are normalized from their actual mesh geometry so seats face the desks. The pack has no toilet model; the existing CC0 Kenney toilets remain and have been turned to face the open stalls. Supplemental clocks, bins, telephone, radio and vending-machine props remain from the earlier CC0 packs.
+**School assets by A.R.S|T.**, the exact requested pack, supplies desks, chairs, cafeteria tables and attached stools, sink counters, display counters, lockers, shelving, boards, books, computer props and extinguishers. Chair backrests are normalized from their actual mesh geometry so seats face the desks. The pack has no toilet model; the existing CC0 Kenney toilets remain and have been turned to face the stall entrances. Supplemental clocks, bins, telephone, radio and vending-machine props remain from the earlier CC0 packs.
 
 Vintage Living Room supplies walls, floors, ceilings, windows, doors/frames and curtains. Its office furniture has been replaced with the school pack. The classroom lectern is now a compact school desk at a sensible teaching height. Emergency sconces face into the room and clear the wall. Clues and supplies sit on real furniture; overlapping evidence pedestals were removed. Wall controls have readable labels and mounts.
 
+Version 1.2 expands teaching desks, storage racks, books, worksheets, ceiling projectors, computer seating and secondary work areas using the same free packs. Clocks are oriented and centered against the wall. Three numbered bathroom cubicles now have working imported door leaves and latches. Door operating plates remain reachable from both sides; locks never prevent closing or emergency exit. A manually closed door stays closed when an NPC reaches it.
+
 ## Play changes
 
+- The evacuation checklist includes cached portraits rendered from the actual cast models, their roles, availability and player-assigned trust tags. Passenger choices survive reopening the checklist and save/load.
+- Final reports describe the causal outcome and list passengers, exclusions, containment and innocent losses. The historical branch only refers to the recovered recording when collected. Leaving three or more available humans behind counts toward A Clean Register.
 - Settings offer exclusive fullscreen, borderless windowed and ordinary windowed display modes. Apply and Return saves the selection.
 - Characters have individual greetings, request reminders and specific responses when an item is delivered.
 - Nine physical supplies can be picked up, carried, saved and delivered: radio batteries, a key sign-out book, a fuse, sample kit, USB drive, inhaler, can opener, cassette and insulated gloves.

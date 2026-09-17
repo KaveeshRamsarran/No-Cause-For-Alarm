@@ -37,6 +37,39 @@ namespace NoCauseForAlarm
             }
             var archive=FindObjectsByType<Door>(FindObjectsSortMode.None).First(d=>d.room=="ARCHIVE");
             Check(archive.Locked,"archive starts access-locked");
+            g.Player.Teleport(new Vector3(0,.05f,50),0);archive.open=true;g.State.power=false;
+            archive.Toggle();Check(!archive.open&&archive.manualClosed,"archive closes during a power failure and remembers manual closure");
+            archive.Toggle();Check(!archive.open,"locked archive still prevents entry from corridor");
+            g.Player.Teleport(g.Campus.FindRoom("ARCHIVE").center+new Vector3(0,.05f,0),0);
+            archive.Toggle();Check(archive.open,"archive permits emergency exit without power or clearance");g.State.power=true;
+            foreach(var stall in FindObjectsByType<Door>(FindObjectsSortMode.None).Where(d=>d.isStall))
+            {
+                g.Player.Teleport(stall.transform.position+new Vector3(.65f,.05f,1.85f),180);
+                stall.open=false;stall.Toggle();yield return new WaitForSeconds(.9f);
+                Check(stall.open&&Quaternion.Angle(stall.transform.localRotation,Quaternion.identity)>95,"stall opens: "+stall.room);
+                float until=Time.time+1.65f;while(Time.time<until){g.Player.body.Move(new Vector3(0,-2,-1.6f)*Time.deltaTime);yield return null;}
+                Check(g.Player.transform.position.z<stall.transform.position.z-.3f,"stall doorway is traversable: "+stall.room);
+                stall.Toggle();yield return new WaitForSeconds(.9f);
+                Check(!stall.open&&Quaternion.Angle(stall.transform.localRotation,Quaternion.identity)<1,"stall closes from inside: "+stall.room);
+                stall.Toggle();
+            }
+            var testStall=FindObjectsByType<Door>(FindObjectsSortMode.None).First(d=>d.isStall);
+            testStall.open=true;testStall.transform.localRotation=Quaternion.Euler(0,testStall.sign*testStall.swing,0);
+            g.Player.Teleport(testStall.transform.position+new Vector3(.65f,.05f,0),0);testStall.Toggle();yield return new WaitForSeconds(1);
+            Check(Quaternion.Angle(testStall.transform.localRotation,Quaternion.identity)>5,"closing door waits while player occupies its swing");
+            g.Player.Teleport(testStall.transform.position+new Vector3(.65f,.05f,1.85f),0);yield return new WaitForSeconds(1);
+            Check(Quaternion.Angle(testStall.transform.localRotation,Quaternion.identity)<1,"door finishes closing once player steps clear");
+            var storesDoor=FindObjectsByType<Door>(FindObjectsSortMode.None).First(d=>d.room=="STORES");
+            storesDoor.open=false;storesDoor.manualClosed=true;storesDoor.transform.localRotation=Quaternion.identity;
+            var ada=g.Campus.actors[2];ada.transform.position=new Vector3(-4,0,40);ada.OnHour(12);yield return new WaitForSeconds(2);
+            Check(!storesDoor.open&&ada.transform.position.x<-3,"scheduled NPC waits at a manually closed door");
+            ada.ResetBody();ada.transform.position=g.Campus.HomePosition(2);storesDoor.open=true;storesDoor.manualClosed=false;
+            foreach(var plate in g.Campus.GetComponentsInChildren<Interactable>().Where(i=>i.name=="Door operating plate"))
+            {
+                float direction=Mathf.Abs(plate.transform.position.x)<2.8f?Mathf.Sign(plate.transform.position.x):-Mathf.Sign(plate.transform.position.x);
+                var origin=plate.transform.position-Vector3.right*direction*.6f;
+                Check(Physics.Raycast(origin,Vector3.right*direction,out var hit,.7f)&&hit.collider.gameObject==plate.gameObject,"door plate reachable: "+plate.door.room+" "+(Mathf.Abs(plate.transform.position.x)<2.8f?"outside":"inside"));
+            }
             var room=g.Campus.FindRoom("CLASSROOM 03");g.Player.Teleport(new Vector3(0,.1f,20),0);yield return new WaitForSeconds(.5f);yield return Capture("04-corridor");
             int actionCount=g.State.actions;g.Talk(g.Campus.actors[2]);g.Question(4);g.LeaveTalk();
             Check(!g.State.Has("key")&&g.State.actions==actionCount,"help request waits for physical supplies without spending an action");
@@ -68,6 +101,9 @@ namespace NoCauseForAlarm
             var fuse=FindObjectsByType<Interactable>(FindObjectsSortMode.None).First(i=>i.kind=="power");g.Interact(fuse);Check(g.State.power&&g.State.repaired,"power repair restores supply");
             g.State.hour=17;g.State.actions=1;g.Mode=ScreenMode.Play;g.Spend("Smoke final action");Check(g.State.hour==18,"day reaches evacuation");g.Mode=ScreenMode.Play;
             var exit=FindObjectsByType<Interactable>(FindObjectsSortMode.None).First(i=>i.kind=="evacuation");g.Interact(exit);Check(g.Mode==ScreenMode.Evacuation,"exit opens manifest");yield return Capture("09-manifest");
+            int excludedPassenger=g.State.evacuation[0];g.State.evacuation.Remove(excludedPassenger);g.ShowNotebook();g.Mode=ScreenMode.Play;g.Interact(exit);
+            Check(!g.State.evacuation.Contains(excludedPassenger),"manifest selections survive reviewing case notes and reopening exit");
+            g.Save();var manifestSave=SaveStore.Load();Check(manifestSave.manifestPrepared&&!manifestSave.evacuation.Contains(excludedPassenger),"manifest selections persist through save and load");
             int first=Array.FindIndex(g.State.people,p=>p.infiltrator);g.State.Accuse(first);g.State.evacuation=Enumerable.Range(0,12).Where(i=>!g.State.people[i].infiltrator).ToList();g.End(false);
             Check(g.State.ending=="THE LAST BUS","integrated survival ending");yield return Capture("10-ending");
             g.Save();var loaded=SaveStore.Load();Check(loaded!=null&&loaded.ending==g.State.ending,"save/load roundtrip");g.MainMenu();g.NewGame();Check(g.Mode==ScreenMode.Intro&&!g.State.ended,"new game resets ending");

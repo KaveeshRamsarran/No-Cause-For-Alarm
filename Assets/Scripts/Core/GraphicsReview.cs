@@ -31,6 +31,21 @@ namespace NoCauseForAlarm
             Check(lighter!=null,"imported Poly Haven lighter mesh");
             Check(g.Player.flame.GetComponent<FlameVfx>()!=null,"animated lighter flame");
             Check(g.Campus.GetComponentsInChildren<Transform>().Count(t=>t.name.StartsWith("School assets / "))>50,"requested School assets furnish the campus");
+            Check(g.UI.Portraits.Ready&&g.UI.Portraits.images.All(p=>p!=null),"all twelve cast portraits are generated from game models");
+            Check(FindObjectsByType<Door>(FindObjectsSortMode.None).Count(d=>d.isStall)==3,"three working bathroom stall doors");
+            Physics.SyncTransforms();
+            foreach(var actor in g.Campus.actors)
+            {
+                var body=actor.GetComponent<CapsuleCollider>();
+                bool clear=g.Campus.GetComponentsInChildren<BoxCollider>().Where(b=>SchoolFurniture.Models.ContainsKey(b.name)).All(b=>!Physics.ComputePenetration(body,actor.transform.position,actor.transform.rotation,b,b.transform.position,b.transform.rotation,out _,out _));
+                Check(clear,"character home clears furniture: "+Cast.All[actor.id].name);
+            }
+            foreach(var clock in g.Campus.GetComponentsInChildren<Transform>().Where(t=>t.name=="Wall clock"))
+            {
+                var bounds=new Bounds(clock.position,Vector3.zero);foreach(var r in clock.GetComponentsInChildren<Renderer>())bounds.Encapsulate(r.bounds);
+                Check(bounds.size.z<.15f&&bounds.size.x>.35f&&bounds.size.y>.35f,"clock face parallel to wall: "+clock.position);
+                Check(bounds.min.z>Mathf.Round(clock.position.z/10)*10-4.89f,"clock clears wall: "+clock.position);
+            }
             foreach(var chair in g.Campus.GetComponentsInChildren<Transform>().Where(t=>t.name=="schoolChair"||t.name=="chairDesk"))
             {
                 var b=CampusArt.LocalBounds(chair);Vector3 back=Vector3.zero;int count=0;
@@ -51,10 +66,13 @@ namespace NoCauseForAlarm
                 Check(!Physics.CheckBox(mount.position,new Vector3(.21f,.11f,.032f),mount.rotation,~0,QueryTriggerInteraction.Ignore),"emergency sconce clears wall at "+mount.position);
             g.Player.Teleport(new Vector3(0,.05f,12),90);g.Player.pitch=-15;yield return Shot("emergency-sconce");
             g.Player.Teleport(new Vector3(-8,.05f,3.6f),180);yield return Shot("classroom");
+            g.Player.Teleport(new Vector3(-4.4f,.05f,-2.8f),180);g.Player.pitch=-24;yield return Shot("wall-clock");
+            g.Player.Teleport(new Vector3(-8,.05f,3.6f),180);
             g.Player.lighterRaised=true;g.Player.ToggleFlame();yield return Shot("lighter");
             foreach(int id in new[]{0,2,3,5}){g.Talk(g.Campus.actors[id]);yield return Shot("person-"+id);g.LeaveTalk();}
             g.Player.Teleport(new Vector3(-8,.05f,33.5f),180);yield return Shot("office");
-            g.Player.Teleport(new Vector3(8,.05f,20),180);g.Player.pitch=12;yield return Shot("bathroom");
+            g.Player.Teleport(new Vector3(8,.05f,21.8f),180);g.Player.pitch=4;yield return Shot("bathroom");
+            var openStall=FindObjectsByType<Door>(FindObjectsSortMode.None).First(d=>d.isStall&&d.room=="STALL 2");openStall.open=true;yield return Shot("bathroom-open");openStall.open=false;
             g.Player.Teleport(new Vector3(8,.05f,3.7f),180);yield return Shot("cafeteria");
             g.Player.Teleport(new Vector3(-8,.05f,21),310);g.Player.pitch=19;
             var candle=FindObjectsByType<TestCandle>(FindObjectsSortMode.None).First(c=>c.haunted);candle.Ignite();yield return Shot("candle");
@@ -69,6 +87,17 @@ namespace NoCauseForAlarm
             g.Talk(g.Campus.actors[1]);g.Question(4);g.LeaveTalk();g.UI.OpenRequests();yield return Shot("requests");
             foreach(string clue in new[]{"key","register","bag","tissue","photo","report","maintenance","fuel","medical","cctv","files","analysis","flame","attendance","recording","protocol"})g.State.AddEvidence(clue);
             g.UI.OpenEvidence();yield return Shot("evidence-list");
+            g.State.hour=18;g.State.evacuation=Enumerable.Range(0,12).Where(g.State.Available).ToList();g.Mode=ScreenMode.Evacuation;yield return Shot("manifest");
+            var savedState=g.State;
+            foreach(var ending in new[]{"THE LAST BUS","INFILTRATION","A CLEAN REGISTER","THE BUILDING REMAINS","THE PREVIOUS COHORT","OVERRUN"})
+            {
+                var state=GameState.New(5);state.ceilingSealed=ending!="THE BUILDING REMAINS";state.lecturerConfessed=ending=="THE PREVIOUS COHORT";
+                state.evacuation=Enumerable.Range(0,12).Where(i=>!state.people[i].infiltrator).ToList();state.ending=ending;state.ended=true;
+                if(ending=="INFILTRATION")state.evacuation.Add(Array.FindIndex(state.people,p=>p.infiltrator));
+                if(ending=="A CLEAN REGISTER")state.evacuation.RemoveRange(0,3);
+                g.State=state;g.Mode=ScreenMode.Ending;yield return Shot("ending-"+ending.ToLower().Replace(' ','-'));
+            }
+            g.State=savedState;
             foreach(var supply in FindObjectsByType<SupplyPickup>(FindObjectsSortMode.None))
             {
                 bool supported=Physics.Raycast(supply.transform.position-Vector3.up*.002f,Vector3.down,out var hit,.06f)&&hit.collider.GetComponentInParent<SupplyPickup>()==null;

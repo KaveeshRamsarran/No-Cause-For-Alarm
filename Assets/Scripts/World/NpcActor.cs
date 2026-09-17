@@ -24,12 +24,14 @@ namespace NoCauseForAlarm
             scheduledHour=hour;
             // Route through the actual doorway and keep to the clear perimeter around classroom desks.
             Room next=(hour==12||hour==16)?GameDirector.I.Campus.FindRoom("CAFETERIA"):room;
-            home=next.center+new Vector3((id%3-1)*1.5f,0,-3.4f+(hour==12||hour==16?(id/3)*.55f:0));
+            bool gathering=hour==12||hour==16;
+            // Waiting positions occupy the cafeteria's three clear aisles, away from counters and stools.
+            home=gathering?next.center+(id<6?new Vector3(0,0,-2.1f+id*1.2f):id<9?new Vector3(4.1f,0,-1.7f+(id-6)*1.2f):new Vector3(-4.1f,0,-1.5f+(id-9)*1.5f)):GameDirector.I.Campus.HomePosition(id);
             route.Clear();float side=Mathf.Sign(transform.position.x);float fromZ=Mathf.Round(transform.position.z/10)*10;
             if(Mathf.Abs(transform.position.x)>2.5f)
             {route.Enqueue(new Vector3(side*4.0f,0,transform.position.z));route.Enqueue(new Vector3(side*4.0f,0,fromZ));route.Enqueue(new Vector3(0,0,fromZ));}
             route.Enqueue(new Vector3(0,0,next.center.z));route.Enqueue(new Vector3(next.side*4,0,next.center.z));
-            route.Enqueue(new Vector3(next.side*4,0,home.z));route.Enqueue(home);
+            route.Enqueue(gathering?new Vector3(home.x,0,next.center.z):new Vector3(next.side*4,0,home.z));route.Enqueue(home);
             target=route.Dequeue();relocating=true;
         }
         void Update()
@@ -56,8 +58,8 @@ namespace NoCauseForAlarm
                 else
                 {
                     // Closed doors stop a schedule. An NPC waits rather than walking through it.
-                    bool blocked=Physics.Raycast(transform.position+Vector3.up,delta.normalized,out var obstacle,.65f);
-                    if(blocked){var door=obstacle.collider.GetComponentInParent<Door>();if(door!=null&&!door.Locked)door.open=true;}
+                    bool blocked=Physics.CapsuleCast(transform.position+Vector3.up*.35f,transform.position+Vector3.up*1.5f,.30f,delta.normalized,out var obstacle,.38f,~0,QueryTriggerInteraction.Ignore);
+                    if(blocked){var door=obstacle.collider.GetComponentInParent<Door>();if(door!=null&&!door.Locked&&!door.manualClosed)door.open=true;}
                     if(!blocked)transform.position+=delta.normalized*Time.deltaTime*.8f;
                     transform.rotation=Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(delta),Time.deltaTime*4);
 

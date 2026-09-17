@@ -1,4 +1,4 @@
-NO CAUSE FOR ALARM - 1.1.0
+NO CAUSE FOR ALARM - 1.2.0
 
 First-person psychological horror in a locked college wing.
 Talk, investigate, test and decide who boards the 18:00 evacuation bus.
@@ -17,6 +17,11 @@ Tab: notebook. M: campus directory. Esc: pause/close.
 Four consequential actions advance the hour. Movement and brief questions are free.
 The notebook has a WAIT UNTIL NEXT HOUR option. At 18:00, use the transport doors
 at the north end of the main corridor to choose passengers and finish the day.
+
+The bus checklist includes character portraits, roles and your trust tags.
+The final report explains the outcome of your selections and containment work.
+Doors can be closed during outages; wall plates operate classroom doors from
+either side. Bathroom stalls have working privacy doors.
 
 Collect supplies and return them to people who ask for help. Track deliveries in
 TAB > SUPPLIES / REQUESTS. Picking up supplies is free; delivery costs one action.
@@ -37,7 +42,7 @@ Styloo / School Classrooms Asset Pack, Kenney / Furniture Kit (CC0).
 School assets (A.R.S|T.), City People (Denys Almaral), Vintage Living Room (ZNS3D):
 free Unity Store packs, Standard Unity Asset Store EULA.
 Vintage Lighter (Slinc / Poly Haven): CC0. No player hand or priest model. Concrete footsteps: supplied by owner, free use confirmed.
-Original code, story, lighter, effects and ambient sound.
+Original code, story, effects and ambient sound.
 Full provenance: ASSET_CREDITS.txt. Development notes: DEVELOPMENT_LOG.md.
 
 Save data: Windows LocalLow/Bellwether Games/NO CAUSE FOR ALARM.

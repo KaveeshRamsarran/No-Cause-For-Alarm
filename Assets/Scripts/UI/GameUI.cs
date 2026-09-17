@@ -6,6 +6,8 @@ namespace NoCauseForAlarm
     public class GameUI:MonoBehaviour
     {
         GameDirector G=>GameDirector.I;
+        public CastPortraits Portraits {get;private set;}
+        void Awake(){Portraits=gameObject.AddComponent<CastPortraits>();}
         public void OpenRequests(){tab=3;scroll=Vector2.zero;G.Mode=ScreenMode.Notebook;}
         public void OpenEvidence(){tab=1;scroll=evidenceScroll=Vector2.zero;G.Mode=ScreenMode.Notebook;}
         readonly Color cream=new Color(.94f,.92f,.84f),muted=new Color(.72f,.76f,.69f),amber=new Color(.86f,.72f,.42f),ink=new Color(.035f,.048f,.047f,.97f);
@@ -78,7 +80,7 @@ namespace NoCauseForAlarm
             Text(G.State.hour.ToString("00")+":00   /   "+(G.State.hour<18?G.State.actions+" ACTIONS":"TRANSPORT"),48,36,245,25,label);
             Text(G.Campus.Location(G.Player.transform.position),48,64,400,23,small);
             Fill(new Rect(638,358,4,4),cream);
-            string prompt=G.Player.npcTarget!=null?"E  /  TALK TO "+Cast.All[G.Player.npcTarget.id].name.ToUpper():G.Player.target!=null?"E  /  "+G.Player.target.prompt:"";
+            string prompt=G.Player.npcTarget!=null?"E  /  TALK TO "+Cast.All[G.Player.npcTarget.id].name.ToUpper():G.Player.target!=null?"E  /  "+(G.Player.target.door!=null?G.Player.target.door.Prompt:G.Player.target.prompt):"";
             if(prompt!=""){Fill(new Rect(335,628,610,44),new Color(.02f,.03f,.025f,.82f));Text(prompt,355,639,570,27,label);}
             Text("TAB  CASE NOTES     M  DIRECTORY     F  FLAME     R  RAISE / LOWER",34,682,800,25,small);
             if(G.Player.lighterRaised)Text("FUEL  "+Mathf.CeilToInt(G.State.fuel)+"%",1070,638,180,25,small);
@@ -242,22 +244,31 @@ namespace NoCauseForAlarm
         void Evacuation()
         {
             Panel("18:00 / FINAL PASSENGER MANIFEST","Who leaves with you?");
-            Text("Select passengers. Detained and missing people cannot board. Your notes remain subjective; the bus will not check your work.",60,188,1140,70,body);
+            Text("Click a card to select a passenger. Your trust notes are not proof of identity.\nLeaving someone off this list does not detain them. Review your evidence before departure.",60,183,1140,49,label);
             for(int i=0;i<12;i++)
             {
-                bool available=G.State.Available(i);int col=i/6,row=i%6;GUI.enabled=available;
-                if(Button((!available?"UNAVAILABLE  /  ":G.State.evacuation.Contains(i)?"[X]  ":"[  ]  ")+Cast.All[i].name,60+col*591,274+row*48,570,40))
-                {if(G.State.evacuation.Contains(i))G.State.evacuation.Remove(i);else G.State.evacuation.Add(i);}GUI.enabled=true;
+                bool available=G.State.Available(i),selected=available&&G.State.evacuation.Contains(i);int col=i%3,row=i/3;
+                float x=60+col*391,y=237+row*92;var state=G.State.people[i];
+                GUI.enabled=available;
+                if(Button("",x,y,376,84)){if(selected)G.State.evacuation.Remove(i);else G.State.evacuation.Add(i);G.Save();}
+                GUI.enabled=true;
+                if(Portraits.images[i]!=null)GUI.DrawTexture(new Rect(x+6,y+5,63,74),Portraits.images[i],ScaleMode.ScaleToFit);
+                if(selected)Fill(new Rect(x,y,3,84),amber);
+                Text(Cast.All[i].name,x+80,y+6,287,26,new GUIStyle(label){fontSize=18});
+                Text(Cast.All[i].role,x+80,y+32,280,23,small);
+                string status=state.dead?"DECEASED":state.missing?"MISSING":state.detained?"DETAINED":selected?"[X] BOARDING":"[ ] LEFT BEHIND";
+                Text(status+(available?" / "+(state.trustTag==1?"TRUST":state.trustTag==2?"SUSPICIOUS":"UNSURE"):""),x+80,y+58,283,23,small);
             }
+            Text(G.State.evacuation.FindAll(G.State.Available).Count+" passengers selected. Excluded people remain at the college.",60,609,1130,27,small);
             if(Button("RETURN TO CASE NOTES",60,645,350)){G.ShowNotebook();}
-            if(G.State.lecturerConfessed&&G.State.ceilingSealed){if(Button("STAY / TRANSMIT THE NAMES",426,645,405))G.End(true);}
+            if(G.State.lecturerConfessed&&G.State.ceilingSealed&&G.State.HumanHelper(0)){if(Button("STAY / TRANSMIT THE EVIDENCE",426,645,405))G.End(true);}
             if(Button("AUTHORISE DEPARTURE",850,645,370))G.End(false);
         }
         void Ending()
         {
             Panel("NO CAUSE FOR ALARM / FINAL REPORT",G.State.ending);
-            Text(Cast.EndingText(G.State.ending),80,221,1090,290,new GUIStyle(body){fontSize=27});
-            Rule(80,558,1100);Text("CASE "+G.State.seed.ToString("X8")+"     /     EVIDENCE "+G.State.evidence.Count+"     /     WRONGFUL DETENTIONS "+G.State.mistakes,80,586,1100,35,small);
+            Text(EndingReport.Narrative(G.State),80,195,1090,262,new GUIStyle(body){fontSize=23});
+            Rule(80,474,1100);Text(EndingReport.Consequences(G.State),80,490,1090,138,new GUIStyle(small){fontSize=16});
             if(Button("RETURN TO MENU",60,650,350))G.MainMenu();if(Button("ANOTHER DAY",438,650,350))G.NewGame();
             if(Button("CREDITS",816,650,400))G.Mode=ScreenMode.Credits;
         }

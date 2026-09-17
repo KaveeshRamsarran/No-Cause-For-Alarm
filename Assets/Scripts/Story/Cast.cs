@@ -58,17 +58,5 @@ namespace NoCauseForAlarm
             "17:00 | FINAL REVIEW\nEvacuation is expected at eighteen hundred. Prepare a passenger manifest at the east exit.",
             "18:00 | TRANSPORT HAS ARRIVED\nThe bus has no interior lights. Decide who gets on."
         };
-        public static string EndingText(string title)
-        {
-            switch (title)
-            {
-                case "THE LAST BUS": return "The people you chose sit apart. Nobody sleeps. At the district boundary, the driver asks whether this is everyone.\n\nYou say yes.\n\nBehind you, someone counts the seats again.";
-                case "INFILTRATION": return "At the first stop, a passenger thanks you for believing them. Their reflection keeps looking forward after they turn.\n\nThe bus joins the evening traffic.\n\nThe city has a great many classrooms.";
-                case "A CLEAN REGISTER": return "Every suspicious name is crossed out. So are several others. The bus is almost empty.\n\nYou remember a voice asking you to put the lighter away. You cannot remember whose.\n\nThe report calls your actions proportionate.";
-                case "THE BUILDING REMAINS": return "The last door is locked. The passengers are accounted for. The campus will reopen on Monday.\n\nIn Classroom 03, a candle is still burning.\n\nAbove it, something learns the sound of the morning bell.";
-                case "THE PREVIOUS COHORT": return "Venn stays by the sealed duct. Twenty years ago he chose a control group and left them inside. Today you refuse to leave him alone.\n\nJune's envelope contains nineteen names. You transmit every one.\n\nFor the first time, the announcement stops mid-sentence.";
-                default: return "The exit opens before the checks are complete. A voice outside calls each survivor by name. Then it calls names no one has given it.\n\nThe doors close again.\n\nAt 18:01 the college records a successful evacuation.";
-            }
-        }
     }
 }

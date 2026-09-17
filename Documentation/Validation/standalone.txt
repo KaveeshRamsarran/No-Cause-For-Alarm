@@ -17,6 +17,45 @@ PASS walkable doorway: MAINTENANCE
 PASS walkable doorway: ARCHIVE
 PASS walkable doorway: UTILITY
 PASS archive starts access-locked
+PASS archive closes during a power failure and remembers manual closure
+PASS locked archive still prevents entry from corridor
+PASS archive permits emergency exit without power or clearance
+PASS stall opens: STALL 3
+PASS stall doorway is traversable: STALL 3
+PASS stall closes from inside: STALL 3
+PASS stall opens: STALL 1
+PASS stall doorway is traversable: STALL 1
+PASS stall closes from inside: STALL 1
+PASS stall opens: STALL 2
+PASS stall doorway is traversable: STALL 2
+PASS stall closes from inside: STALL 2
+PASS closing door waits while player occupies its swing
+PASS door finishes closing once player steps clear
+PASS scheduled NPC waits at a manually closed door
+PASS door plate reachable: LECTURE 01 outside
+PASS door plate reachable: LECTURE 01 inside
+PASS door plate reachable: CAFETERIA outside
+PASS door plate reachable: CAFETERIA inside
+PASS door plate reachable: CLASSROOM 02 outside
+PASS door plate reachable: CLASSROOM 02 inside
+PASS door plate reachable: COMPUTER LAB outside
+PASS door plate reachable: COMPUTER LAB inside
+PASS door plate reachable: CLASSROOM 03 outside
+PASS door plate reachable: CLASSROOM 03 inside
+PASS door plate reachable: BATHROOM outside
+PASS door plate reachable: BATHROOM inside
+PASS door plate reachable: STAFF OFFICE outside
+PASS door plate reachable: STAFF OFFICE inside
+PASS door plate reachable: SECURITY outside
+PASS door plate reachable: SECURITY inside
+PASS door plate reachable: STORES outside
+PASS door plate reachable: STORES inside
+PASS door plate reachable: MAINTENANCE outside
+PASS door plate reachable: MAINTENANCE inside
+PASS door plate reachable: ARCHIVE outside
+PASS door plate reachable: ARCHIVE inside
+PASS door plate reachable: UTILITY outside
+PASS door plate reachable: UTILITY inside
 PASS rendered screenshot: 04-corridor
 PASS help request waits for physical supplies without spending an action
 PASS collectible enters inventory: batteries
@@ -57,6 +96,8 @@ PASS power repair restores supply
 PASS day reaches evacuation
 PASS exit opens manifest
 PASS rendered screenshot: 09-manifest
+PASS manifest selections survive reviewing case notes and reopening exit
+PASS manifest selections persist through save and load
 PASS integrated survival ending
 PASS rendered screenshot: 10-ending
 PASS save/load roundtrip
@@ -65,5 +106,5 @@ PASS chronological run finds ceiling without injected evidence
 PASS full chronological investigation reaches survival through ordinary actions
 PASS full run retains combined clues and secret branch
 PASS continue restores completed case
-PERFORMANCE NVIDIA GeForce RTX 3060 / 1280x720 / median 10.00 ms / p95 10.00 ms / allocated 126 MiB
+PERFORMANCE NVIDIA GeForce RTX 3060 / 1280x720 / median 10.00 ms / p95 10.00 ms / allocated 135 MiB
 TOTAL ERRORS: 0

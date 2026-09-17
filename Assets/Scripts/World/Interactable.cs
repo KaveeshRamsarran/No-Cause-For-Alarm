@@ -10,17 +10,48 @@ namespace NoCauseForAlarm
     }
     public class Door:MonoBehaviour
     {
-        public string room;public bool open;public float sign;
+        public string room;public bool open,manualClosed,isStall;public float sign;
+        public float swing=94;BoxCollider leaf;bool waitingForPlayer;
+        public string Prompt => (open?"CLOSE ":"OPEN ")+room+(isStall?"":" DOOR");
         public bool Locked
         {
             get{var s=GameDirector.I.State;return (room=="ARCHIVE"&&(!s.archiveUnlocked||!s.power))||(room=="STAFF OFFICE"&&!s.Has("key"));}
         }
         public void Toggle()
         {
-            if(Locked){GameDirector.I.Toast(room=="ARCHIVE"?"Archive lock: power and security clearance required.":"Brass lock. Ada Moss carries the staff key.");return;}
-            open=!open;GameDirector.I.Audio.OneShot("door",transform.position,.7f);
+            var g=GameDirector.I;
+            // A lock controls entry, never closing or escape from inside the room.
+            bool inside=!isStall&&g.Campus.Location(g.Player.transform.position)==room;
+            if(!open&&Locked&&!inside){g.Toast(room=="ARCHIVE"?"Archive lock: power and security clearance required.":"Brass lock. Ada Moss carries the staff key.");return;}
+            open=!open;manualClosed=!open;g.Audio.OneShot("door",transform.position,.7f);
         }
-        void Update(){transform.localRotation=Quaternion.Slerp(transform.localRotation,Quaternion.Euler(0,open?sign*94:0,0),Time.deltaTime*5);}
+        void Update()
+        {
+            if(leaf==null)leaf=GetComponentInChildren<BoxCollider>();
+            var next=Quaternion.RotateTowards(transform.localRotation,Quaternion.Euler(0,open?sign*swing:0,0),Time.deltaTime*150);
+            // Stop at the player instead of pushing them through the wall with a rotating collider.
+            var player=GameDirector.I.Player;
+            if(leaf!=null&&player!=null&&Quaternion.Angle(next,transform.localRotation)>.01f)
+            {
+                var rotation=transform.parent.rotation*next;
+                var position=transform.position+rotation*Vector3.Scale(leaf.transform.localPosition,transform.lossyScale);
+                var leafRotation=rotation*leaf.transform.localRotation;
+                var center=position+leafRotation*Vector3.Scale(leaf.center,leaf.transform.lossyScale);
+                var local=Quaternion.Inverse(leafRotation)*(player.transform.TransformPoint(player.body.center)-center);
+                var half=Vector3.Scale(leaf.size,leaf.transform.lossyScale)*.5f;
+                float dx=Mathf.Max(0,Mathf.Abs(local.x)-half.x),dz=Mathf.Max(0,Mathf.Abs(local.z)-half.z);
+                float radius=player.body.radius+player.body.skinWidth;
+                // Door hinges only rotate around Y; this capsule/rectangle clearance check
+                // includes the controller's skin, before its next physics movement can depenetrate.
+                if(dx*dx+dz*dz<radius*radius&&Mathf.Abs(local.y)<half.y+player.body.height*.5f)
+                {
+                    if(!waitingForPlayer&&GameDirector.I.Mode==ScreenMode.Play)GameDirector.I.Toast("Step clear of the door so it can finish moving.",3);
+                    waitingForPlayer=true;return;
+                }
+            }
+            waitingForPlayer=false;
+            transform.localRotation=next;
+        }
     }
     public class TestCandle:MonoBehaviour
     {

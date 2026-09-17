@@ -10,6 +10,7 @@ public static class GameInput {
  [StructLayout(LayoutKind.Sequential)] public struct Point { public int X; public int Y; }
  [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr window);
  [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr window, int command);
+ [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr window, IntPtr after, int x, int y, int w, int h, uint flags);
  [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
  [DllImport("user32.dll")] public static extern bool ClientToScreen(IntPtr window, ref Point point);
  [DllImport("user32.dll")] public static extern void keybd_event(byte key, byte scan, uint flags, UIntPtr extra);
@@ -21,6 +22,7 @@ $process = Start-Process -FilePath (Join-Path $projectPath 'Builds\Windows\NO CA
 Start-Sleep -Seconds 5
 $process.Refresh()
 [GameInput]::ShowWindow($process.MainWindowHandle,9) | Out-Null
+[GameInput]::SetWindowPos($process.MainWindowHandle,[IntPtr](-1),0,0,0,0,0x43) | Out-Null
 [GameInput]::SetForegroundWindow($process.MainWindowHandle) | Out-Null
 $origin = New-Object GameInput+Point
 [GameInput]::ClientToScreen($process.MainWindowHandle,[ref]$origin) | Out-Null
@@ -48,6 +50,7 @@ function Capture-Game([string]$name) {
 Click-Game 610 -12
 Start-Sleep -Milliseconds 500
 if ([GameInput]::GetForegroundWindow() -ne $process.MainWindowHandle) { throw 'Player did not receive focus; no gameplay input sent.' }
+[GameInput]::SetWindowPos($process.MainWindowHandle,[IntPtr](-2),0,0,0,0,0x43) | Out-Null
 Click-Game 280 423
 for($step=0;$step -lt 7;$step++) { Click-Game 1080 673 }
 Start-Sleep -Seconds 1

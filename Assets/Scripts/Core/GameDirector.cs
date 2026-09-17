@@ -48,7 +48,7 @@ namespace NoCauseForAlarm
         public void NewGame()
         {
             ClearTransient();State=GameState.New(unchecked((int)DateTime.UtcNow.Ticks));ResetActors();
-            foreach(var door in FindObjectsByType<Door>(FindObjectsSortMode.None))door.open=door.room!="ARCHIVE"&&door.room!="STAFF OFFICE";
+            foreach(var door in FindObjectsByType<Door>(FindObjectsSortMode.None)){door.open=!door.isStall&&door.room!="ARCHIVE"&&door.room!="STAFF OFFICE";door.manualClosed=false;}
             Campus.actors[0].transform.position=new Vector3(-8,0,-3.3f);Campus.actors[0].transform.rotation=Quaternion.identity;
             for(int i=1;i<10;i++){Campus.actors[i].transform.position=i==9?new Vector3(-6,0,4.2f):new Vector3(i<=4?-11.8f:-4.2f,0,-2+((i-1)%4)*1.7f);Campus.actors[i].transform.rotation=Quaternion.Euler(0,180,0);}
             Player.Teleport(new Vector3(-8,.05f,3.6f),180);introStep=0;Mode=ScreenMode.Intro;Audio.Voice("intro0");
@@ -167,7 +167,9 @@ namespace NoCauseForAlarm
                     State.ceilingSealed=true;Spend("Closed and secured extraction damper E-03.");Audio.OneShot("impact",item.transform.position,.8f);Toast("The scratching stops.");break;
                 case "evacuation":
                     if(State.hour<18){Notice("TRANSPORT / NOT YET CLEARED","Transport is expected at 18:00. Use your remaining actions to investigate. You can wait for the next hour from the notebook.");break;}
-                    State.evacuation=Enumerable.Range(0,12).Where(State.Available).ToList();Mode=ScreenMode.Evacuation;break;
+                    if(!State.manifestPrepared){State.evacuation=Enumerable.Range(0,12).Where(State.Available).ToList();State.manifestPrepared=true;}
+                    else State.evacuation.RemoveAll(i=>i<0||i>=12||!State.Available(i));
+                    Mode=ScreenMode.Evacuation;break;
             }
         }
         public void Talk(NpcActor actor)

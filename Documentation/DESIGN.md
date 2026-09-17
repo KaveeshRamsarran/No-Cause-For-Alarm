@@ -23,13 +23,15 @@ Detention removes a character's availability. Wrongful detention increments the 
 3. All three infiltrators still active: Overrun.
 4. Any available infiltrator on the selected passenger manifest: Infiltration.
 5. Ceiling organism uncontained: The Building Remains.
-6. Three wrongful detentions or equivalent innocent losses: A Clean Register.
+6. Three wrongful detentions or at least three humans dead, detained or available but excluded from the manifest: A Clean Register.
 7. Otherwise: The Last Bus.
 
-The hidden historical ending reveals Venn's participation in an earlier control-group experiment. It requires the old photograph and sealed report, then confronting him, containing the ceiling organism, and choosing to transmit the names instead of boarding.
+The hidden historical ending reveals Venn's participation in an earlier control-group experiment. It requires the old photograph and sealed report, then confronting him, containing the ceiling organism, and choosing to transmit the evidence instead of boarding.
 
 ## Technical scope
 
-A single bootstrap scene assembles a deterministic authored campus at runtime. This keeps placement and dependencies reviewable in source. The runtime is split into story/state, first-person movement, world/interaction, character behavior, audio and UI. The Windows player uses URP and Mono. Characters have original faceted heads and procedural articulated animation. CCTV combines a real camera reference view with authored archive observations.
+A single bootstrap scene assembles a deterministic authored campus at runtime. This keeps placement and dependencies reviewable in source. The runtime is split into story/state, first-person movement, world/interaction, character behavior, audio and UI. The Windows player uses URP and Mono. Characters use City People skinned models and native authored humanoid animation. Cached manifest portraits are rendered from those same prefabs. CCTV combines a real camera reference view with authored archive observations.
 
-Full performance capture, facial acting, external animation packs, rebinding and a physically simulated building-wide navigation mesh are outside this implementation. The initial 45–90 minute duration in the brief is a target to evaluate with human playtesting, not a measured claim.
+Full performance capture, facial acting, rebinding and a physically simulated building-wide navigation mesh are outside this implementation. The initial 45–90 minute duration in the brief is a target to evaluate with human playtesting, not a measured claim.
+
+The final report derives passenger names, human exclusions, containment and recording references from the saved case. Fatal injury and an attack at departure have distinct Overrun accounts. The historical ending confirms evidence transmission and staying with Venn, without claiming that the selected passengers were successfully evacuated.

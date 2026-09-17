@@ -47,3 +47,11 @@ Imported Slinc's CC0 Vintage Lighter from Poly Haven with textured metal, cutout
 Added fullscreen, borderless windowed and windowed preferences. Added nine collectable supplies, saved inventory, item hand-ins, distinct request dialogue and a notebook request tracker. Help requests now require the relevant items/documents and grant concrete access, evidence, repairs or health. Repeated hand-ins cannot duplicate rewards. Individual greetings replace the shared opening line.
 
 Free Unity Store raw art and derived prefabs/clips remain local under their EULA. The compiled Windows build includes them; setup scripts and the current source/credits are documented in Documentation/GRAPHICS_OVERHAUL.md. The CC0 lighter source and converted art are included in the repository. Final verification records are in Documentation/QA.md.
+
+## 1.2 / furnished rooms and final review
+
+Expanded the existing free School pack layout with teaching desks, classroom shelving, books, worksheets, projectors, computer seating and room-specific work areas. Clock orientation is normalized before scaling so the face sits parallel to its wall. Bathroom cubicles have fitted imported door leaves, numbered signs and working inside/outside interaction.
+
+Door locks now restrict outside entry only; doors can always close and permit emergency egress. Fixed plates operate room doors from either side when the leaf is against the wall. NPCs respect manual closure, and moving leaves wait when the player occupies their swing.
+
+The bus manifest now uses cached photos rendered from the actual cast models, roles, trust tags and explicit boarding status. State-specific endings explain rescue, admission of infiltrators, containment failure, innocent losses, fatal injury and the historical disclosure. An empty or heavily exclusionary manifest no longer receives the ordinary successful-rescue ending.

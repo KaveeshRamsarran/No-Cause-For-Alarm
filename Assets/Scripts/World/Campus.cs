@@ -19,7 +19,8 @@ namespace NoCauseForAlarm
             var center=FindRoom(Cast.All[id].room).center;
             if(id==6)return center+new Vector3(-2,0,-3.4f);
             if(id==5)return center+new Vector3(0,0,-4.35f);
-            return center+new Vector3(id==7?2:0,0,id==9?3.8f:-3.4f);
+            if(id==7)return center+new Vector3(1,0,-2.95f);
+            return center+new Vector3(0,0,id==9?3.8f:-3.4f);
         }
         public Room FindRoom(string name)=>rooms.Find(r=>r.name==name);
         public string Location(Vector3 p)
@@ -107,6 +108,12 @@ namespace NoCauseForAlarm
             CampusArt.Fit("DoorFrame",transform,new Vector3(s*2.79f,1.31f,z),new Vector3(2.26f,2.65f,.18f),90);
             var door=d.AddComponent<Door>();door.room=r.name;door.sign=s;door.open=r.name!="ARCHIVE"&&r.name!="STAFF OFFICE";
             var interact=leaf.AddComponent<Interactable>();interact.Setup("door","OPEN / CLOSE "+r.name,"");interact.door=door;
+            // Fixed plates remain reachable from either side when the leaf is against the wall.
+            foreach(float x in new[]{s*2.60f,s*3.00f})
+            {
+                var plate=Geometry.Box("Door operating plate",new Vector3(x,1.28f,z-1.38f),new Vector3(.06f,.28f,.22f),Geometry.metal,transform);
+                var control=plate.AddComponent<Interactable>();control.Setup("door","OPEN / CLOSE "+r.name,"");control.door=door;
+            }
             Geometry.Lamp(c+new Vector3(-2,3.18f,-2),false,transform);Geometry.Lamp(c+new Vector3(2,3.18f,2),false,transform);
             Geometry.Lamp(c+new Vector3(s*4,2.7f,0),true,transform);
             if(r.name.Contains("CLASSROOM")||r.name=="LECTURE 01")
@@ -123,7 +130,7 @@ namespace NoCauseForAlarm
             }
             else if(r.name=="BATHROOM")
             {
-                for(int a=-2;a<=2;a+=2){Geometry.Prop("toilet",c+new Vector3(a,0,-3.5f),.7f,180,transform);Geometry.Box("Stall",c+new Vector3(a+ .8f,1.1f,-3),new Vector3(.1f,2.2f,2.5f),Geometry.trim,transform);}
+                CampusFurnishing.Stalls(r,transform);
                 Geometry.Prop("bathroomSink",c+new Vector3(1,0,1),1.6f,0,transform);
             }
             else
@@ -139,7 +146,7 @@ namespace NoCauseForAlarm
             if(r.name=="CAFETERIA")Geometry.Prop("vending",c+new Vector3(3.9f,0,3.9f),1.25f,180,transform);
             if(r.name=="LECTURE 01")Geometry.Prop("lectern",c+new Vector3(-2.7f,0,-3.7f),1.05f,0,transform);
             if(r.name.Contains("CLASSROOM")||r.name=="LECTURE 01")
-            {Geometry.Prop("clock",c+new Vector3(3.6f,2.55f,-4.79f),.38f,0,transform);Geometry.Prop("book",c+new Vector3(0,.785f,0),.30f,0,transform);}
+            {CampusFurnishing.Clock(c+new Vector3(3.6f,2.55f,-4.72f),transform);Geometry.Prop("book",c+new Vector3(0,.785f,0),.30f,0,transform);}
             if(r.name=="SECURITY")Geometry.Prop("radio",c+new Vector3(1,.82f,1.5f),.45f,0,transform);
             if(r.name=="STAFF OFFICE")Geometry.Prop("telephone",c+new Vector3(.3f,.82f,1),.28f,0,transform);
             if(r.index%2==0)for(int l=0;l<3;l++)Geometry.Prop("locker",new Vector3(s*2.35f,0,z+2.1f+l*.65f),.5f,s<0?90:270,transform);
@@ -147,6 +154,7 @@ namespace NoCauseForAlarm
             Geometry.Box("Emergency notice",new Vector3(s*2.63f,1.65f,z+3),new Vector3(.045f,.7f,.52f),Geometry.paper,transform,false);
             Geometry.Text("REMAIN\nINSIDE",new Vector3(s*2.595f,1.68f,z+3),.08f,new Color(.18f,.2f,.17f),transform,s<0?90:-90);
             CampusArt.RoomDetails(r,transform);
+            CampusFurnishing.Dress(r,transform);
         }
         void PlaceEvidence(string id,string label,string room,Vector3 offset)
         {

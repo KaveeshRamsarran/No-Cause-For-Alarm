@@ -31,7 +31,7 @@ public static class BuildGame
     [MenuItem("NO CAUSE FOR ALARM/Configure project")]
     public static void Configure()
     {
-        PlayerSettings.companyName="Bellwether Games";PlayerSettings.productName="NO CAUSE FOR ALARM";PlayerSettings.bundleVersion="1.1.0";
+        PlayerSettings.companyName="Bellwether Games";PlayerSettings.productName="NO CAUSE FOR ALARM";PlayerSettings.bundleVersion="1.2.0";
         PlayerSettings.defaultScreenWidth=1280;PlayerSettings.defaultScreenHeight=720;PlayerSettings.fullScreenMode=FullScreenMode.FullScreenWindow;
         PlayerSettings.runInBackground=true;PlayerSettings.colorSpace=ColorSpace.Linear;
         PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone,ScriptingImplementation.Mono2x);
@@ -89,6 +89,16 @@ public static class BuildGame
         check(test.ResolveEnding(false)=="A CLEAN REGISTER","paranoia");
         var secret=GameState.New(9);secret.ceilingSealed=true;secret.lecturerConfessed=true;check(secret.ResolveEnding(true)=="THE PREVIOUS COHORT","secret");
         secret.health=0;check(secret.ResolveEnding(true)=="OVERRUN","death overrides secret");
+        var abandoned=GameState.New(5);abandoned.ceilingSealed=true;abandoned.Accuse(Array.FindIndex(abandoned.people,p=>p.infiltrator));
+        check(abandoned.ResolveEnding(false)=="A CLEAN REGISTER","empty bus cannot count as a successful rescue");
+        foreach(string ending in new[]{"THE LAST BUS","INFILTRATION","A CLEAN REGISTER","THE BUILDING REMAINS","THE PREVIOUS COHORT","OVERRUN"})
+        {
+            test.ending=ending;check(EndingReport.Narrative(test).Length>200,"explained outcome for "+ending);
+            check(EndingReport.Consequences(test).Contains("CEILING SOURCE:"),"state-specific consequences for "+ending);
+        }
+        secret.ending="OVERRUN";check(EndingReport.Narrative(secret).Contains("injuries"),"death describes injuries rather than a completed evacuation");
+        secret.health=100;secret.ending="THE PREVIOUS COHORT";check(!EndingReport.Narrative(secret).Contains("June's recovered recording"),"secret ending does not invent unrecovered recording");
+        secret.AddEvidence("recording");check(EndingReport.Narrative(secret).Contains("June's recovered recording"),"secret ending acknowledges collected recording");
         Directory.CreateDirectory("Artifacts");File.WriteAllText("Artifacts/logic-validation.txt",assertions+" assertions passed / 1000 seeds / six endings / save roundtrip / day progression\n");
         Debug.Log("NCFA_LOGIC_OK "+assertions+" assertions");
     }
