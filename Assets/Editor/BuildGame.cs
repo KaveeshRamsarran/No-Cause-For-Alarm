@@ -31,7 +31,7 @@ public static class BuildGame
     [MenuItem("NO CAUSE FOR ALARM/Configure project")]
     public static void Configure()
     {
-        PlayerSettings.companyName="Bellwether Games";PlayerSettings.productName="NO CAUSE FOR ALARM";PlayerSettings.bundleVersion="1.2.0";
+        PlayerSettings.companyName="Bellwether Games";PlayerSettings.productName="NO CAUSE FOR ALARM";PlayerSettings.bundleVersion="1.2.1";
         PlayerSettings.defaultScreenWidth=1280;PlayerSettings.defaultScreenHeight=720;PlayerSettings.fullScreenMode=FullScreenMode.FullScreenWindow;
         PlayerSettings.runInBackground=true;PlayerSettings.colorSpace=ColorSpace.Linear;
         PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Standalone,ScriptingImplementation.Mono2x);

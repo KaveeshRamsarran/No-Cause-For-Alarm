@@ -55,3 +55,9 @@ Expanded the existing free School pack layout with teaching desks, classroom she
 Door locks now restrict outside entry only; doors can always close and permit emergency egress. Fixed plates operate room doors from either side when the leaf is against the wall. NPCs respect manual closure, and moving leaves wait when the player occupies their swing.
 
 The bus manifest now uses cached photos rendered from the actual cast models, roles, trust tags and explicit boarding status. State-specific endings explain rescue, admission of infiltrators, containment failure, innocent losses, fatal injury and the historical disclosure. An empty or heavily exclusionary manifest no longer receives the ordinary successful-rescue ending.
+
+## 1.2.1 / occasional movement and window dressing
+
+Each character now chooses an occasional short walk after an independent idle interval. Destination and path capsule checks avoid furniture, walls, other people and the player. Roaming remains within the current room, pauses with menus and conversations, and yields to scheduled moves. Blocked routes are abandoned rather than pushing through an obstacle.
+
+Lecture and office curtains are fitted to the imported window frame bounds, aligning the rail, panel center, width and hem with the opening. Their depth is offset toward the room so the fabric clears the frame.

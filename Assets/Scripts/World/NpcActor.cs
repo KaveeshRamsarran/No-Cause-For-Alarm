@@ -6,6 +6,9 @@ namespace NoCauseForAlarm
     {
         public int id;public Room room;public Transform head;public bool transformed;
         public Vector3 home;float reactionCooldown;Vector3 target;bool relocating;int scheduledHour;
+        float idleTime,blockedTime;bool wandering;System.Random wanderRandom;
+        public bool IsWandering=>wandering;
+        public int WanderTrips {get;private set;}
         readonly System.Collections.Generic.Queue<Vector3> route=new System.Collections.Generic.Queue<Vector3>();
         Renderer[] renderers;Collider actorCollider;bool lastVisible=true;CharacterVisual visual;
         public PersonState State=>GameDirector.I.State?.people[id];
@@ -15,13 +18,37 @@ namespace NoCauseForAlarm
             visual=gameObject.AddComponent<CharacterVisual>();visual.Build(id);head=visual.face;
             var col=gameObject.AddComponent<CapsuleCollider>();col.height=1.9f;col.radius=.34f;col.center=Vector3.up*.95f;
             actorCollider=col;renderers=GetComponentsInChildren<Renderer>();
+            ResetWander();
+        }
+        float PauseLength()=>12+(float)wanderRandom.NextDouble()*18;
+        void ResetWander(){wanderRandom=new System.Random(unchecked(GameDirector.I.State.seed+id*7919));idleTime=7+(float)wanderRandom.NextDouble()*12;wandering=false;blockedTime=0;WanderTrips=0;}
+        void StopWalking(){relocating=wandering=false;route.Clear();blockedTime=0;idleTime=PauseLength();}
+        public bool TryBeginWander()
+        {
+            var g=GameDirector.I;
+            if(relocating||g.Mode!=ScreenMode.Play||!g.State.Available(id)||g.Chase!=null||Vector3.Distance(transform.position,g.Player.transform.position)<2.3f)return false;
+            var currentRoom=g.Campus.FindRoom(g.Campus.Location(transform.position));if(currentRoom==null)return false;
+            for(int attempt=0;attempt<48;attempt++)
+            {
+                float angle=(float)wanderRandom.NextDouble()*Mathf.PI*2,distance=.85f+(float)wanderRandom.NextDouble()*1.1f;
+                var next=transform.position+new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle))*distance;
+                if(Mathf.Abs(next.x-currentRoom.center.x)>4.45f||Mathf.Abs(next.z-currentRoom.center.z)>4.45f)continue;
+                bool blocked=false;
+                foreach(var hit in Physics.OverlapCapsule(next+Vector3.up*.37f,next+Vector3.up*1.5f,.34f,~0,QueryTriggerInteraction.Ignore))if(hit!=actorCollider){blocked=true;break;}
+                if(blocked)continue;
+                foreach(var hit in Physics.CapsuleCastAll(transform.position+Vector3.up*.37f,transform.position+Vector3.up*1.5f,.34f,(next-transform.position).normalized,distance,~0,QueryTriggerInteraction.Ignore))if(hit.collider!=actorCollider){blocked=true;break;}
+                if(blocked)continue;
+                target=next;route.Clear();relocating=wandering=true;blockedTime=0;WanderTrips++;return true;
+            }
+            return false;
         }
         public void TransformBody(){transformed=true;visual.distorted=true;visual.React();}
-        public void ResetBody(){transformed=false;relocating=false;route.Clear();visual.distorted=false;}
+        public void ResetBody(){transformed=false;relocating=false;route.Clear();visual.distorted=false;ResetWander();}
         public void OnHour(int hour)
         {
             if(State==null||!GameDirector.I.State.Available(id))return;
             scheduledHour=hour;
+            wandering=false;blockedTime=0;idleTime=PauseLength();
             // Route through the actual doorway and keep to the clear perimeter around classroom desks.
             Room next=(hour==12||hour==16)?GameDirector.I.Campus.FindRoom("CAFETERIA"):room;
             bool gathering=hour==12||hour==16;
@@ -39,13 +66,20 @@ namespace NoCauseForAlarm
             var g=GameDirector.I;if(g==null||g.State==null)return;var s=State;
             bool available=g.State.Available(id);
             if(available!=lastVisible){foreach(var r in renderers)r.enabled=available;actorCollider.enabled=available;lastVisible=available;}
-            if(!available||g.Mode!=ScreenMode.Play)return;
+            if(!available){if(relocating)StopWalking();return;}
+            if(g.Mode!=ScreenMode.Play){if(g.Talking==this&&wandering)StopWalking();return;}
             float dist=Vector3.Distance(transform.position,g.Player.transform.position);reactionCooldown-=Time.deltaTime;
+            if(wandering&&(dist<1.8f||g.Chase!=null))StopWalking();
+            if(!relocating)
+            {
+                idleTime-=Time.deltaTime;
+                if(idleTime<=0){idleTime=PauseLength();TryBeginWander();}
+            }
             if(g.Player.flameOn&&dist<2.8f&&reactionCooldown<=0)
             {
                 reactionCooldown=20;g.Subtitle(Cast.All[id].name+": "+Cast.All[id].fire,6);
                 if(!s.observations.Contains("Watched the lighter at close range."))s.observations.Add("Watched the lighter at close range.");
-                if(s.infiltrator||id==7){visual.React();target=transform.position-transform.forward*.6f;}
+                if(s.infiltrator||id==7){visual.React();if(wandering)StopWalking();}
                 if(s.infiltrator&&g.State.hour>=15&&id%3==0){TransformBody();g.BeginChase(transform.position,false,id);}
             }
             if(relocating)
@@ -53,14 +87,15 @@ namespace NoCauseForAlarm
                 Vector3 delta=target-transform.position;delta.y=0;
                 if(delta.magnitude<.18f)
                 {
-                    if(route.Count>0)target=route.Dequeue();else relocating=false;
+                    if(route.Count>0)target=route.Dequeue();else StopWalking();
                 }
                 else
                 {
                     // Closed doors stop a schedule. An NPC waits rather than walking through it.
                     bool blocked=Physics.CapsuleCast(transform.position+Vector3.up*.35f,transform.position+Vector3.up*1.5f,.30f,delta.normalized,out var obstacle,.38f,~0,QueryTriggerInteraction.Ignore);
                     if(blocked){var door=obstacle.collider.GetComponentInParent<Door>();if(door!=null&&!door.Locked&&!door.manualClosed)door.open=true;}
-                    if(!blocked)transform.position+=delta.normalized*Time.deltaTime*.8f;
+                    if(!blocked){transform.position+=delta.normalized*Mathf.Min(delta.magnitude,Time.deltaTime*.8f);blockedTime=0;}
+                    else {blockedTime+=Time.deltaTime;if(blockedTime>(wandering?1.2f:4))StopWalking();}
                     transform.rotation=Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(delta),Time.deltaTime*4);
 
                 }

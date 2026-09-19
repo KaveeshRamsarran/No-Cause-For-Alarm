@@ -174,7 +174,11 @@ namespace NoCauseForAlarm
         }
         public void Talk(NpcActor actor)
         {
-            if(!State.Available(actor.id))return;Talking=actor;Player.Focus(actor);Mode=ScreenMode.Dialogue;
+            if(!State.Available(actor.id))return;
+            // A person interrupted mid-walk faces the player before the close conversation view.
+            var facing=Player.transform.position-actor.transform.position;facing.y=0;
+            if(facing.sqrMagnitude>.01f)actor.transform.rotation=Quaternion.LookRotation(facing);
+            Talking=actor;Player.Focus(actor);Mode=ScreenMode.Dialogue;
             dialogue=Cast.Greeting(actor.id,State);
         }
         public void LeaveTalk(){if(Talking!=null){Player.Unfocus();Talking=null;}Mode=ScreenMode.Play;}

@@ -18,6 +18,6 @@ with ZipFile(archive) as z:
     assert 'NO CAUSE FOR ALARM/NO CAUSE FOR ALARM.exe' in z.namelist()
     assert 'NO CAUSE FOR ALARM/UnityPlayer.dll' in z.namelist()
 data=archive.read_bytes()
-metadata={'title':'NO CAUSE FOR ALARM','version':'1.2.0','platform':'Windows x64','unity':'6000.4.7f1','file':archive.name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
+metadata={'title':'NO CAUSE FOR ALARM','version':'1.2.1','platform':'Windows x64','unity':'6000.4.7f1','file':archive.name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}
 (output/'build-info.json').write_text(json.dumps(metadata,indent=2)+'\n')
 print(json.dumps(metadata,indent=2))

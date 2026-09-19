@@ -44,3 +44,7 @@ No paid assets were purchased. Asset Store packs are free to acquire under their
 5. Run `Tools/build.ps1`, or open `Assets/Scenes/EastWing.unity` in Unity.
 
 The downloadable Windows build is already prepared. `Tools/graphics-test.ps1` checks character animations and graphics placements, and captures review images. `Tools/smoke-test.ps1` checks the investigation, deliveries, save/load and door traversal. Both use separate test saves.
+
+## 1.2.1 refinements
+
+People now take occasional short walks, with independent pauses of 12-30 seconds between attempts. Roaming picks clear paths within the current room, stops for conversations or a nearby player, and pauses in menus. Authored walk and idle clips follow the movement. Curtains in Lecture 01 and Staff Office are aligned to the actual imported window frame rather than the whole wall module.

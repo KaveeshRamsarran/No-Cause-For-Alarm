@@ -4,7 +4,7 @@ A first-person psychological horror game set during a college lockdown. Talk to 
 
 ![City People character conversation in the east wing](Documentation/Screenshots/conversation.png)
 
-Version **1.2.0** adds furnished teaching areas and storage, corrected wall clocks, working bathroom stall doors, reliable door closing and emergency exit access. The bus checklist shows portraits of the actual City People characters. Endings explain what happened and report who boarded, who was left behind and whether the source was contained.
+Version **1.2.1** adds occasional independent character wandering and curtains fitted to their window frames, alongside furnished teaching areas and storage, corrected wall clocks, working bathroom stall doors, reliable door closing and emergency exit access. The bus checklist shows portraits of the actual City People characters. Endings explain what happened and report who boarded, who was left behind and whether the source was contained.
 
 The free School assets pack supplies school furniture; Vintage Living Room supplies architecture and doors. The Poly Haven lighter and candles have animated flames. The hand and priest remain removed.
 

@@ -1,4 +1,4 @@
-NO CAUSE FOR ALARM - 1.2.0
+NO CAUSE FOR ALARM - 1.2.1
 
 First-person psychological horror in a locked college wing.
 Talk, investigate, test and decide who boards the 18:00 evacuation bus.
@@ -17,6 +17,9 @@ Tab: notebook. M: campus directory. Esc: pause/close.
 Four consequential actions advance the hour. Movement and brief questions are free.
 The notebook has a WAIT UNTIL NEXT HOUR option. At 18:00, use the transport doors
 at the north end of the main corridor to choose passengers and finish the day.
+
+People occasionally take short walks around their rooms, pausing for conversations.
+Curtains are aligned to the actual window openings.
 
 The bus checklist includes character portraits, roles and your trust tags.
 The final report explains the outcome of your selections and containment work.

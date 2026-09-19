@@ -69,8 +69,23 @@ namespace NoCauseForAlarm
         public static void RoomDetails(Room room,Transform parent)
         {
             var c=room.center;float s=room.side;
-            Fit("wall_with_one_window",parent,c+new Vector3(s*5.04f,1.65f,0),new Vector3(3.9f,3.2f,.30f),s<0?90:270);
-            if(room.name=="LECTURE 01"||room.name=="STAFF OFFICE")Fit("curtain_1",parent,c+new Vector3(s*4.75f,1.8f,-1.5f),new Vector3(2.5f,2.6f,.1f),90);
+            var window=Fit("wall_with_one_window",parent,c+new Vector3(s*5.04f,1.65f,0),new Vector3(3.9f,3.2f,.30f),s<0?90:270);
+            if(window!=null&&(room.name=="LECTURE 01"||room.name=="STAFF OFFICE"))
+            {
+                // Fit to the actual frame inside the wall module, not the module's wall-sized bounds.
+                foreach(var frame in window.GetComponentsInChildren<Renderer>())if(frame.name=="window_small_frame")
+                {
+                    var b=frame.bounds;float height=b.size.y+.32f;
+                    var center=new Vector3(s<0?b.max.x+.13f:b.min.x-.13f,b.max.y+.15f-height*.5f,b.center.z);
+                    var curtain=Fit("curtain_1",parent,center,new Vector3(b.size.z+.38f,height,.13f),s<0?90:270);
+                    var alignment=window.AddComponent<WindowDressing>();alignment.frame=frame;alignment.curtains=curtain.transform;
+                    break;
+                }
+            }
         }
+    }
+    public class WindowDressing:MonoBehaviour
+    {
+        public Renderer frame;public Transform curtains;
     }
 }

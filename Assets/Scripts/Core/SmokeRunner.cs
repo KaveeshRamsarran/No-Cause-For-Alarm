@@ -28,6 +28,27 @@ namespace NoCauseForAlarm
             yield return Capture("01-menu");g.NewGame();yield return new WaitForSeconds(1);yield return Capture("02-opening");
             for(int i=0;i<7;i++){g.IntroNext();yield return null;}Check(g.Mode==ScreenMode.Play,"opening reaches gameplay");
             yield return new WaitForSeconds(1);yield return Capture("03-lecture");
+            g.Player.Teleport(new Vector3(0,.05f,-4),0);
+            foreach(var actor in g.Campus.actors){actor.ResetBody();actor.transform.position=g.Campus.HomePosition(actor.id);}
+            Physics.SyncTransforms();var beforeWalk=g.Campus.actors.Select(a=>a.transform.position).ToArray();
+            foreach(var actor in g.Campus.actors)Check(actor.TryBeginWander(),"clear wandering destination for "+Cast.All[actor.id].name);
+            yield return new WaitForSeconds(2.8f);
+            foreach(var actor in g.Campus.actors)
+            {
+                Check(Vector3.Distance(beforeWalk[actor.id],actor.transform.position)>.2f,"authored walking moves "+Cast.All[actor.id].name);
+                var body=actor.GetComponent<CapsuleCollider>();
+                // Grounded capsules touch the floor; ignore PhysX's sub-millimetre contact tolerance.
+                var collisions=g.Campus.GetComponentsInChildren<BoxCollider>().Where(b=>Physics.ComputePenetration(body,actor.transform.position,actor.transform.rotation,b,b.transform.position,b.transform.rotation,out _,out float depth)&&depth>.005f).Select(b=>b.name).ToArray();
+                Check(collisions.Length==0,"wander destination clears environment: "+Cast.All[actor.id].name+(collisions.Length==0?"":" / "+string.Join(", ",collisions)));
+            }
+            var talker=g.Campus.actors[2];talker.ResetBody();talker.TryBeginWander();g.Talk(talker);var talkPosition=talker.transform.position;
+            yield return new WaitForSeconds(.4f);Check(!talker.IsWandering&&Vector3.Distance(talkPosition,talker.transform.position)<.01f,"conversation stops wandering");
+            var towardPlayer=g.Player.transform.position-talker.transform.position;towardPlayer.y=0;Check(Vector3.Dot(talker.transform.forward,towardPlayer.normalized)>.99f,"interrupted walker turns toward the player for conversation");g.LeaveTalk();
+            int[] trips=g.Campus.actors.Select(a=>a.WanderTrips).ToArray();Time.timeScale=4;yield return new WaitForSeconds(36);Time.timeScale=1;
+            Check(g.Campus.actors.Count(a=>a.WanderTrips>trips[a.id])>=8,"independent idle timers trigger occasional automatic walks");
+            var pausedPositions=g.Campus.actors.Select(a=>a.transform.position).ToArray();g.Mode=ScreenMode.Pause;yield return new WaitForSeconds(.5f);
+            Check(g.Campus.actors.All(a=>Vector3.Distance(a.transform.position,pausedPositions[a.id])<.01f),"wandering pauses with the game");g.Mode=ScreenMode.Play;
+            foreach(var actor in g.Campus.actors){actor.ResetBody();actor.transform.position=g.Campus.HomePosition(actor.id);}
             foreach(var r in g.Campus.rooms)
             {
                 var door=FindObjectsByType<Door>(FindObjectsSortMode.None).First(d=>d.room==r.name);door.open=true;

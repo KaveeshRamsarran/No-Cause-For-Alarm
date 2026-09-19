@@ -33,6 +33,15 @@ namespace NoCauseForAlarm
             Check(g.Campus.GetComponentsInChildren<Transform>().Count(t=>t.name.StartsWith("School assets / "))>50,"requested School assets furnish the campus");
             Check(g.UI.Portraits.Ready&&g.UI.Portraits.images.All(p=>p!=null),"all twelve cast portraits are generated from game models");
             Check(FindObjectsByType<Door>(FindObjectsSortMode.None).Count(d=>d.isStall)==3,"three working bathroom stall doors");
+            foreach(var dressing in FindObjectsByType<WindowDressing>(FindObjectsSortMode.None))
+            {
+                var b=new Bounds(dressing.curtains.position,Vector3.zero);foreach(var renderer in dressing.curtains.GetComponentsInChildren<Renderer>())b.Encapsulate(renderer.bounds);
+                var frame=dressing.frame.bounds;
+                Check(Mathf.Abs(b.center.z-frame.center.z)<.02f,"curtains centered on the actual window opening at "+frame.center);
+                Check(Mathf.Abs(b.max.y-frame.max.y-.15f)<.02f&&b.min.y<frame.min.y,"curtain rail and hem aligned to frame");
+                Check(b.size.z>frame.size.z&&b.size.z<frame.size.z+.45f,"curtain width follows window frame");
+                Check(frame.center.x<0?b.min.x>frame.max.x:b.max.x<frame.min.x,"curtains hang inside the window without clipping its frame");
+            }
             Physics.SyncTransforms();
             foreach(var actor in g.Campus.actors)
             {
@@ -79,6 +88,7 @@ namespace NoCauseForAlarm
             g.Mode=ScreenMode.Settings;yield return Shot("settings");g.Mode=ScreenMode.Play;
             var door=FindObjectsByType<Door>(FindObjectsSortMode.None).First(d=>d.room=="LECTURE 01");door.open=false;
             g.Player.Teleport(new Vector3(0,.05f,0),270);yield return Shot("door-closed");door.open=true;yield return Shot("door-open");
+            g.Player.Teleport(new Vector3(-10.5f,.05f,0),270);g.Player.pitch=-5;yield return Shot("window-curtains");
             var npc=g.Campus.actors[5];npc.transform.position=new Vector3(0,0,15);npc.OnHour(12);g.Player.Teleport(new Vector3(0,.05f,11),0);yield return Shot("walking");
             g.BeginChase(new Vector3(0,0,16),true);yield return Shot("pursuer");
             foreach(var a in g.Campus.actors){var anim=a.GetComponentInChildren<Animator>();Check(anim.GetBoneTransform(HumanBodyBones.LeftHand).position.y<anim.GetBoneTransform(HumanBodyBones.Head).position.y+.2f,"natural resting arm pose: "+Cast.All[a.id].name);}
